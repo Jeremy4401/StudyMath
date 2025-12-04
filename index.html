@@ -150,7 +150,6 @@ header {
     z-index: 99999;
 }
 #transition-screen.active { opacity: 1; }
-
 </style>
 </head>
 <body>
@@ -184,21 +183,69 @@ header {
 
         <div id="hub-scroll" class="scroller">
 
-            <!-- MINECRAFT - Must open in new tab -->
+            <!-- MINECRAFT -->
             <div class="card" onclick="openNewTabGame('https://jeremy4401.github.io/SME/minecraft/Eaglercraft_1.12_Offline_en_US.html')">
                 Minecraft
             </div>
 
-            <!-- SLIME RANCHER - Must open in new tab -->
+            <!-- SLIME RANCHER -->
             <div class="card" onclick="openNewTabGame('https://jeremy4401.github.io/SME/Slimerancher/Slime%20Rancher.html')">
                 Slime Rancher
             </div>
 
-            <!-- EMBED GAME -->
-<div class="card" onclick="openEmbedURL('https://jeremy4401.github.io/SME/Slimerancher/Slime%20Rancher.html')">
-    Embed
-</div>
+            <!-- RETRO BOWL -->
+            <div class="card" onclick="openEmbedURL('https://retrobowl.me/')">
+                Retro Bowl
+            </div>
 
+            <!-- RETRO BOWL COLLEGE -->
+            <div class="card" onclick="openEmbedURL('https://retrobowlcollege.org/')">
+                Retro Bowl College
+            </div>
+
+            <!-- COOKIE CLICKER -->
+            <div class="card" onclick="openEmbedURL('https://orteil.dashnet.org/cookieclicker/')">
+                Cookie Clicker
+            </div>
+
+            <!-- FLAPPY BIRD -->
+            <div class="card" onclick="openEmbedURL('https://flappybird.io/')">
+                Flappy Bird
+            </div>
+
+            <!-- SUPER MARIO 64 -->
+            <div class="card" onclick="openEmbedURL('https://sm64js.com/')">
+                Super Mario 64
+            </div>
+
+            <!-- ZELDA -->
+            <div class="card" onclick="openEmbedURL('https://zelda-lampshade.vercel.app/')">
+                Legend of Zelda
+            </div>
+
+            <!-- SMASH BROS WEB -->
+            <div class="card" onclick="openEmbedURL('https://melee-lite.vercel.app/')">
+                Smash Bros Melee (Web)
+            </div>
+
+            <!-- NEW SUPER MARIO BROS -->
+            <div class="card" onclick="openEmbedURL('https://nsmbhd.net/smb3/')">
+                New Super Mario Bros
+            </div>
+
+            <!-- PAC-MAN -->
+            <div class="card" onclick="openEmbedURL('https://pacman.seven.com/')">
+                Pac-Man
+            </div>
+
+            <!-- DOODLE JUMP -->
+            <div class="card" onclick="openEmbedURL('https://doodlejump.io/')">
+                Doodle Jump
+            </div>
+
+            <!-- CUSTOM SLOT -->
+            <div class="card" onclick="openEmbedURL('PUT URL HERE')">
+                PUT NAME HERE
             </div>
 
         </div>
@@ -211,8 +258,8 @@ header {
 <div id="embed-container"><iframe id="embed-frame"></iframe></div>
 <div id="home-btn" onclick="closeEmbed()">Home</div>
 
-<script>
 
+<script>
 /******** SETTINGS ********/
 function openSettings(){
     document.getElementById("settings-panel").classList.add("open");
@@ -311,6 +358,5 @@ function openNewTabGame(url){
 }
 
 </script>
-
 </body>
 </html>
