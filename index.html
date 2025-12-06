@@ -100,7 +100,6 @@ body.light .postBox { background:#ddd; }
   cursor:pointer;
   transition:.2s;
   position:relative;
-  vertical-align:top;
 }
 .card:hover { transform:translateY(-6px) scale(1.05); }
 .card img { width:100%; border-radius:10px; }
@@ -112,17 +111,7 @@ body.light .postBox { background:#ddd; }
 }
 .star.fav { color:gold; text-shadow:0 0 10px gold; }
 
-/* INLINE GAME FRAME INSIDE CARD */
-.inlineFrame {
-  display:none;
-  width:100%;
-  height:300px;
-  border:none;
-  margin-top:8px;
-  border-radius:10px;
-}
-
-/* EMBED WINDOW (for other flows using play()) */
+/* EMBED WINDOW */
 #embedWin {
   display:none; position:fixed; inset:0; background:#000d;
   z-index:9999;
@@ -202,7 +191,7 @@ body.light .postBox { background:#ddd; }
   <div onclick="nav('games')">🎮</div>
   <div onclick="nav('downloads')">⬇</div>
   <div onclick="nav('favorites')">⭐</div>
-  <div onclick="nav('sme theater')">🎬</div>
+  <div onclick="nav('theater')">🎬</div>
   <div onclick="nav('friends')">👥</div>
   <div onclick="nav('profile')">👤</div>
   <div onclick="openSettings()">⚙️</div>
@@ -256,7 +245,7 @@ body.light .postBox { background:#ddd; }
   <div id="games" class="section"></div>
   <div id="downloads" class="section"></div>
   <div id="favorites" class="section"></div>
-  <div id="sme theater" class="section"></div>
+  <div id="theater" class="section"></div>
   <div id="friends" class="section"></div>
   <div id="profile" class="section"></div>
   <div id="settingsPage" class="section">
@@ -268,7 +257,7 @@ body.light .postBox { background:#ddd; }
 <!-- EMBED WINDOW -->
 <div id="embedWin"><iframe id="embedFrame"></iframe></div>
 
-<!-- GAME DETAILS MODAL (FIXED, IN HTML NOT INSIDE SCRIPT) -->
+<!-- GAME DETAILS MODAL (STILL HERE IF YOU WANT TO RE-USE LATER, BUT NOT REQUIRED) -->
 <div id="gameModal" 
      style="display:none;position:fixed;inset:0;background:#000a;z-index:9999;
             align-items:center;justify-content:center;">
@@ -308,7 +297,7 @@ function nav(id){
     "games": "Games",
     "downloads": "Downloads",
     "favorites": "Favorites",
-    "sme theater": "SME Theater",
+    "theater": "SME Theater",
     "friends": "Friends",
     "profile": "Profile",
     "settingsPage": "Settings"
@@ -386,7 +375,7 @@ function renderContinuePlaying(){
     if(!g) return;
 
     box.innerHTML += `
-      <div class="card" style="width:150px;" onclick="play(enc('${g.url}'))">
+      <div class="card" style="width:150px;" onclick="launchGame('${g.name}')">
         <img src="${g.img}">
         <button>${g.name}</button>
       </div>
@@ -541,9 +530,6 @@ function renderHome(){
   renderActivityHome();
 }
 
-/* Render immediately when loading */
-renderHome();
-
 /* ============================================================
      PART 3 — FULL GAME SYSTEM
 ============================================================ */
@@ -560,7 +546,6 @@ let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
 
 /* ============================
       RENDER GAMES LIST
-   (fixed, with PNG → inline iframe)
 ============================ */
 
 function renderGames(){
@@ -601,17 +586,10 @@ function renderGames(){
   list.forEach(g=>{
     let isFav = favorites.includes(g.name) ? "fav" : "";
     html += `
-      <div class="card" style="position:relative;" data-url="${g.url}">
+      <div class="card" onclick="launchGame('${g.name}')" style="position:relative;">
         <div class="star ${isFav}" onclick="toggleFav('${g.name}');event.stopPropagation();">★</div>
-
-        <!-- PNG preview – click to start game inline -->
-        <img src="${g.img}" alt="${g.name} preview" onclick="startInlineGame(this)">
-
-        <!-- Game title still opens detail modal -->
-        <button onclick="openGameDetails('${g.name}');event.stopPropagation();">${g.name}</button>
-
-        <!-- Inline iframe that appears after clicking PNG -->
-        <iframe class="inlineFrame" allowfullscreen></iframe>
+        <img src="${g.img}">
+        <button>${g.name}</button>
       </div>
     `;
   });
@@ -621,19 +599,13 @@ function renderGames(){
   sec.innerHTML = html;
 }
 
-/* When you click a PNG preview inside a card, start the game inline */
-function startInlineGame(imgEl){
-  const card = imgEl.closest(".card");
-  if (!card) return;
-  const frame = card.querySelector(".inlineFrame");
-  if (!frame) return;
-
-  const url = enc(card.dataset.url);
-
-  // Hide the image, show the game
-  imgEl.style.display = "none";
-  frame.src = url;
-  frame.style.display = "block";
+/* DIRECT FULLSCREEN LAUNCH FROM ANY CARD */
+function launchGame(name){
+  let g = games.find(x=>x.name === name);
+  if(!g) return;
+  play(enc(g.url));
+  addRecent(g.name);
+  renderHome();
 }
 
 /* ============================
@@ -668,7 +640,7 @@ function renderFavorites(){
     if(!g) return;
 
     sec.innerHTML += `
-      <div class="card" onclick="openGameDetails('${g.name}')">
+      <div class="card" onclick="launchGame('${g.name}')">
         <img src="${g.img}">
         <button>${g.name}</button>
       </div>
@@ -716,7 +688,7 @@ function filterCategory(cat){
   list.forEach(g=>{
     let isFav = favorites.includes(g.name) ? "fav" : "";
     html += `
-      <div class="card" onclick="openGameDetails('${g.name}')">
+      <div class="card" onclick="launchGame('${g.name}')">
         <div class="star ${isFav}" onclick="toggleFav('${g.name}');event.stopPropagation();">★</div>
         <img src="${g.img}">
         <button>${g.name}</button>
@@ -729,6 +701,7 @@ function filterCategory(cat){
 
 /* ============================
       GAME DETAILS MODAL (BASE)
+   (NOT REQUIRED FOR LAUNCH, BUT KEPT)
 ============================ */
 
 function openGameDetails(name){
@@ -770,7 +743,7 @@ document.addEventListener("keydown", e=>{
   }
 });
 
-/* INITIAL RENDERS */
+/* INITIAL RENDERS FOR GAMES SECTION */
 renderGames();
 renderFavorites();
 renderCategories();
@@ -967,7 +940,7 @@ function switchFriendTab(code, tab){
       if(!g) return;
 
       html += `
-        <div class='card' onclick="openGameDetails('${g.name}')">
+        <div class='card' onclick="launchGame('${g.name}')">
           <img src="${g.img}">
           <button>${g.name}</button>
         </div>
@@ -982,7 +955,7 @@ function switchFriendTab(code, tab){
       let g = games.find(x=>x.name===f);
       if(g){
         html += `
-          <div class='card' onclick="openGameDetails('${g.name}')">
+          <div class='card' onclick="launchGame('${g.name}')">
             <img src="${g.img}">
             <button>${g.name}</button>
           </div>
@@ -1377,8 +1350,7 @@ function openThemePanel(){
     <label>Accent Color</label><br>
     <input id="c_acc" type="color"><br><br>
 
-    <button onclick="saveCustomTheme()
-"
+    <button onclick="saveCustomTheme()"
       style="padding:10px;border:none;border-radius:8px;background:var(--accent);color:white;">
       Save Theme
     </button>
@@ -1436,7 +1408,7 @@ function openBGMenu(){
     <button onclick="setBG('none')" style="padding:10px;width:260px;border-radius:8px;background:#333;color:white;">Disable</button><br><br>
     <button onclick="setBG('matrix')" style="padding:10px;width:260px;border-radius:8px;background:var(--accent);color:white;">Matrix Rain</button><br><br>
     <button onclick="setBG('stars')" style="padding:10px;width:260px;border-radius:8px;background:var(--accent);color:white;">Particle Stars</button><br><br>
-    <button onclick="setBG('vaporwave')" style="padding:10px;width:260px;border-radius:8px;background:var(--accent);color:white;">Vaporwave Grid</button><br><br>
+    <button onclick="setBG('vaporwave')" style="padding:10px	width:260px;border-radius:8px;background:var(--accent);color:white;">Vaporwave Grid</button><br><br>
     <p style="opacity:.7;margin-top:10px;">Tip: enable Performance Mode in Settings to reduce animation load.</p>
   `;
 }
@@ -1556,7 +1528,7 @@ function animateBG(){
     ctx.strokeStyle = "#ff00ff";
     ctx.lineWidth = 1;
 
-    for(let y=0; y<bgCanvas.height; y+=40){
+    for(let	y=0; y<bgCanvas.height; y+=40){
       ctx.beginPath();
       ctx.moveTo(0, y + (gridOffset*10)%40);
       ctx.lineTo(bgCanvas.width, y + (gridOffset*10)%40);
@@ -1888,6 +1860,10 @@ setInterval(()=>renderHome(), 4000);
 /* Initial profile page render (so it's ready when user clicks) */
 renderProfile();
 
+/* Initial home render AFTER games & config are defined */
+renderHome();
+
+/* THEATER EMBED */
 function loadTheater() {
   document.getElementById("theater").innerHTML = `
     <h1>SME Theater</h1>
