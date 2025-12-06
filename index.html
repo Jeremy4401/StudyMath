@@ -240,7 +240,23 @@ header {
     <button class="download-btn">Play</button>
 </div>
 
-<!-- EMBED VIEWER -->
+            <div class="arrow right-arrow" onclick="scrollRight('hub-scroll')">&#10095;</div>
+    </div>
+</div>
+<div id="page" class="page">
+    <h1>Games</h1>
+
+    <div class="scroller-container">
+        <div class="arrow left-arrow" onclick="scrollLeft('hub-scroll')">&#10094;</div>
+
+        <div id="hub-scroll" class="scroller">
+
+            <div class="download-box" onclick="openEmbedURL('https://jeremy4401.github.io/SME-Theater')">
+    <h2>Youtube</h2>
+    <button class="download-btn">Watch</button>
+</div>
+        
+            <!-- EMBED VIEWER -->
 <div id="embed-container"><iframe id="embed-frame"></iframe></div>
 <div id="home-btn" onclick="closeEmbed()">Home</div>
 
