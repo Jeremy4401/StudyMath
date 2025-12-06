@@ -93,13 +93,28 @@ body.light .postBox { background:#ddd; }
 .card {
   background:var(--bg2);
   width:180px;
+  height:250px;                 /* NEW → all cards same height */
   border-radius:12px;
   padding:12px;
-  display:inline-block;
+  display:flex;                 /* NEW → align content better */
+  flex-direction:column;
+  justify-content:space-between;/* NEW → spaces button evenly */
+  align-items:center;
   margin:8px;
   cursor:pointer;
   transition:.2s;
   position:relative;
+}
+.card:hover { 
+  transform:translateY(-6px) scale(1.05); 
+}
+
+/* MAKE ALL IMAGES UNIFORM */
+.card img {
+  width:100%;
+  height:150px;                 /* NEW → all thumbnails same height */
+  object-fit:cover;             /* NEW → prevents stretching */
+  border-radius:10px;
 }
 .card:hover { transform:translateY(-6px) scale(1.05); }
 .card img { width:100%; border-radius:10px; }
@@ -542,9 +557,9 @@ let games = [
   {name:"Schoolboy Runaway", img:"thumbnails/schoolboyrunaway.png", url:"https://jeremy4401.github.io/Schoolboy-Runaway", cat:"Survival"},
   {name:"Hollow Knight", img:"thumbnails/hollowknight.png", url:"https://jeremy4401.github.io/Hollow-Knight", cat:"Action"},
   {name:"ULTRAKILL", img:"thumbnails/ultrakill.png", url:"https://jeremy4401.github.io/Ultrakill", cat:"Action"},
-  {name:"Kindergarten", img:"thumbnails/kindergarten.png", url:"https://jeremy4401.github.io/kindergarten", cat:"Action"},
-  {name:"Kindergarten 2", img:"thumbnails/kindergarten2.png", url:"https://jeremy4401.github.io/kindergarten-2", cat:"Action"},
-  {name:"Kindergarten 3", img:"thumbnails/kindergarten3.png", url:"https://jeremy4401.github.io/kindergarten-3", cat:"Action"}
+  {name:"Kindergarten", img:"thumbnails/kindergarten.png", url:"https://jeremy4401.github.io/Kindergarten", cat:"Action"},
+  {name:"Kindergarten 2", img:"thumbnails/kindergarten2.png", url:"https://jeremy4401.github.io/Kindergarten-2", cat:"Action"},
+  {name:"Kindergarten 3", img:"thumbnails/kindergarten3.png", url:"https://jeremy4401.github.io/Kindergarten-3/", cat:"Action"}
 ];
 
 
