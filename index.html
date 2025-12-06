@@ -40,8 +40,14 @@ header {
     color: white;
     padding: 12px 18px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+}
+header #site-title {
+    font-size: 22px;
+    font-weight: bold;
+}
+header .spacer {
+    flex: 1;
 }
 
 /* SETTINGS PANEL */
@@ -65,6 +71,9 @@ header {
     padding: 25px 40px 40px;
     margin-bottom: 30px;
     border-bottom: 2px solid #444;
+}
+.section h1 {
+    margin-top: 0;
 }
 
 /* SCROLLER ROW */
@@ -101,6 +110,8 @@ header {
     padding: 10px;
     border-radius: 6px;
     display: inline-block;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 /* EMBED VIEW */
@@ -151,17 +162,17 @@ header {
 <!-- SETTINGS PANEL -->
 <div id="settings-panel">
     <h2>Settings</h2>
-    <button onclick="toggleDarkMode()">Dark Mode</button>
+    <button onclick="toggleDarkMode()">Dark Mode</button><br><br>
     <button onclick="togglePerformance()">Performance Mode</button>
     <hr>
     <button onclick="exportSettings()">Export Settings</button>
     <input type="file" onchange="importSettings(event)">
 </div>
 
-<!-- FIXED HEADER (NO BROKEN LAYOUT ANYMORE) -->
+<!-- HEADER -->
 <header>
     <div id="site-title">SME</div>
-    <div style="flex: 1;"></div>
+    <div class="spacer"></div>
     <button id="settings-button" onclick="openSettings()">Settings</button>
 </header>
 
@@ -204,7 +215,7 @@ header {
                 <button class="download-btn">Play</button>
             </div>
 
-            <!-- BUCKSHOT ROULETTE (PROPERLY FIXED) -->
+            <!-- BUCKSHOT ROULETTE -->
             <div class="card" onclick="openEmbedURL('https://cdn.jsdelivr.net/gh/genizy/web-port@main/buckshot-roulette/index.html')">
                 <h2>Buckshot Roulette</h2>
                 <button class="download-btn">Play</button>
@@ -234,10 +245,20 @@ header {
 
 <script>
 
-/* SETTINGS */
-function openSettings(){ document.getElementById("settings-panel").classList.toggle("open"); }
-function toggleDarkMode(){ document.body.classList.toggle("dark"); }
-function togglePerformance(){ document.body.classList.toggle("performance"); }
+/* SETTINGS PANEL */
+function openSettings(){ 
+    document.getElementById("settings-panel").classList.toggle("open"); 
+}
+
+/* DARK MODE */
+function toggleDarkMode(){
+    document.body.classList.toggle("dark");
+}
+
+/* PERFORMANCE MODE */
+function togglePerformance(){
+    document.body.classList.toggle("performance");
+}
 
 /* EXPORT / IMPORT */
 function exportSettings(){
