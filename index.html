@@ -1990,7 +1990,7 @@ function goHome() {
       activeStart = null;
     }
 
-    const oldPlayP = play;
+const oldPlayP = play;
 play = function (url) {
   const g = games.find((x) => enc(x.url) === url);
   if (g) {
@@ -2001,14 +2001,19 @@ play = function (url) {
 
   oldPlayP(url);
 
-  // Prevent iframe from stealing keyboard ESC key
   setTimeout(() => {
     const frame = document.getElementById("embedFrame");
-    frame.blur();
-    window.focus();
+
+    // Fix for Lego Star Wars + all GBA games
+    if (url.includes("GBA") || url.includes("lsw")) {
+      try { frame.contentWindow.focus(); } catch (e) {}
+    } else {
+      // Original behavior for everything else
+      frame.blur();
+      window.focus();
+    }
   }, 300);
 };
-
 
     const oldOpenDetailP = openGameDetails;
     openGameDetails = function (name) {
