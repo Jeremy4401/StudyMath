@@ -4,18 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎄 StudyMath Game Library 🎅</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
         :root {
             /* Christmas Theme Colors */
-            --color-primary: #e53e3e; /* Bright Red */
-            --color-secondary: #38a169; /* Evergreen */
+            --color-primary: #e53e3e; /* Bright Red (Accent) */
+            --color-secondary: #38a169; /* Evergreen (Hover/Details) */
             --color-background: #0d1117; /* Dark Base */
             --color-card-bg: #1f2937; /* Dark Slate */
             --color-text: #f7fafc; /* Near White Text */
             --color-text-light: #a0aec0; /* Muted Light Grey */
             --color-border: #4a5568; /* Grey Border */
+            --navbar-height: 60px;
             --transition-speed: 0.3s;
         }
 
@@ -24,28 +25,136 @@
             margin: 0;
             padding: 0;
             font-family: 'Poppins', sans-serif;
+            text-decoration: none;
         }
 
         body {
             background-color: var(--color-background);
             color: var(--color-text);
-            padding: 20px;
-            /* Added for falling visual effects */
+            padding-top: var(--navbar-height); /* Space for fixed navbar */
             overflow-x: hidden;
-            position: relative; 
+            position: relative;
+        }
+        
+        /* ------------------ NAVIGATION BAR (THE PAGES) ------------------ */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--navbar-height);
+            background-color: var(--color-card-bg); /* Darker background */
+            border-bottom: 2px solid var(--color-primary);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        header {
-            text-align: center;
-            padding: 40px 0;
-            border-bottom: 1px solid var(--color-border);
-            margin-bottom: 40px;
-        }
-
-        header h1 {
-            font-size: 2.5em;
+        .navbar-logo {
+            font-size: 1.8em;
+            font-weight: 800;
             color: var(--color-primary);
+            margin-right: 40px;
         }
+
+        .navbar-links a {
+            color: var(--color-text);
+            margin-right: 25px;
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 5px 0;
+            transition: color var(--transition-speed), border-bottom var(--transition-speed);
+        }
+
+        .navbar-links a:hover, .navbar-links a.active {
+            color: var(--color-primary);
+            border-bottom: 2px solid var(--color-secondary);
+        }
+        /* ------------------ END NAVIGATION BAR ------------------ */
+
+
+        /* ------------------ GAME LAYOUT (NETFLIX STYLE) ------------------ */
+        .game-section {
+            padding: 40px 0 20px 40px; /* Padding for left alignment */
+        }
+        
+        .section-title {
+            font-size: 2em;
+            color: var(--color-text);
+            margin-bottom: 15px;
+            border-left: 5px solid var(--color-secondary);
+            padding-left: 15px;
+        }
+
+        .game-row {
+            display: flex;
+            overflow-x: scroll; /* Horizontal scrolling */
+            padding-bottom: 20px;
+            gap: 15px; /* Space between cards */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            /* Hide scrollbar for aesthetics */
+            scrollbar-width: none; /* Firefox */
+        }
+        .game-row::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+        
+        /* --- Individual Game Card (Updated for full PNG visibility) --- */
+        .card {
+            flex-shrink: 0; /* Important: prevents cards from shrinking */
+            width: 250px; /* Fixed width for the Netflix look */
+            background-color: var(--color-card-bg);
+            border: 2px solid var(--color-card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05); /* Zoom effect on hover */
+            box-shadow: 0 8px 30px rgba(229, 62, 62, 0.7); /* Red hover glow */
+            border-color: var(--color-primary);
+        }
+
+        .card-image-container {
+            width: 100%;
+            height: auto; 
+            background-color: var(--color-background); /* Dark background for transparent PNGs */
+            padding: 10px; /* Padding to ensure space around the full image */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .game-card img {
+            width: 100%;
+            height: auto;
+            max-height: 140px; /* Max height to keep row size consistent but auto width/height ratio */
+            object-fit: contain; /* Ensures the *entire* image is visible */
+        }
+
+        .card-details {
+            padding: 10px 15px;
+        }
+        
+        .game-card h3 {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 5px;
+        }
+
+        .game-card p {
+            font-size: 0.8em;
+            color: var(--color-text-light);
+            margin-bottom: 5px;
+        }
+        /* ------------------ END GAME LAYOUT ------------------ */
+
 
         /* ------------------ VISUAL EFFECTS (SNOW & BELLS) ------------------ */
         .snow, .bell-fall {
@@ -55,10 +164,9 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 999;
+            z-index: 99; /* Below navigation, above main content */
         }
 
-        /* Styling for the snowflakes */
         .flake {
             position: absolute;
             background: #ffffff;
@@ -67,12 +175,10 @@
             animation: snowfall linear infinite;
         }
         
-        /* Styling for the jingle bells */
         .bell {
             position: absolute;
-            /* Unicode for a small silver/gold bell symbol */
             content: '🔔';
-            font-size: 1.2em; /* Slightly larger than snow */
+            font-size: 1.2em;
             opacity: 0.7;
             animation: bellfall linear infinite;
         }
@@ -90,55 +196,8 @@
         }
         /* ------------------ END VISUAL EFFECTS ------------------ */
 
-        /* --- Game Grid Layout --- */
-        .game-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
-            position: relative; /* To ensure it stays above falling effects */
-            z-index: 100;
-        }
 
-        /* --- Individual Game Card --- */
-        .card {
-            background-color: var(--color-card-bg);
-            border: 2px solid var(--color-secondary); /* Evergreen border */
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
-            cursor: pointer;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(229, 62, 62, 0.5); /* Red hover glow */
-            border-color: var(--color-primary);
-        }
-
-        .game-card img {
-            width: 100%;
-            height: 150px; 
-            object-fit: cover;
-            border-bottom: 1px solid var(--color-border);
-        }
-
-        .game-card h3 {
-            padding: 10px 15px 5px 15px;
-            font-size: 1.1em;
-            font-weight: 600;
-            color: var(--color-primary);
-        }
-
-        .game-card p {
-            padding: 0 15px 15px 15px;
-            font-size: 0.9em;
-            color: var(--color-text-light);
-        }
-
-        /* --- Embed/Game Container (Hidden by default) --- */
+        /* --- Embed/Game Container (Fullscreen Modal) --- */
         #embed-container {
             display: none;
             position: fixed;
@@ -146,35 +205,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            z-index: 1500;
-            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.98);
+            z-index: 2000;
+            padding: 20px;
         }
 
         #game-iframe {
             width: 100%;
-            height: calc(100% - 40px);
-            border: none;
+            height: calc(100% - 50px);
+            border: 2px solid var(--color-primary);
             display: block;
             margin-top: 30px;
         }
 
         #close-button {
             position: absolute;
-            top: 10px;
-            right: 20px;
+            top: 15px;
+            right: 30px;
             background: var(--color-primary);
             color: white;
             border: none;
-            padding: 5px 15px;
+            padding: 8px 20px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1em;
+            font-size: 1.1em;
+            font-weight: 700;
             transition: background var(--transition-speed);
         }
 
         #close-button:hover {
-            background: #9b2c2c; /* Darker Red */
+            background: var(--color-secondary);
         }
     </style>
 </head>
@@ -182,567 +242,958 @@
 
     <div class="snow" id="snow-container"></div>
     <div class="bell-fall" id="bell-container"></div>
-    <header>
-        <h1>🎄 StudyMath Game Library 🎅</h1>
-        <p>Click any card to launch the game.</p>
-    </header>
+    <nav class="navbar">
+        <div class="navbar-logo">StudyMath</div>
+        <div class="navbar-links">
+            <a href="#home" class="active">🏠 Home</a>
+            <a href="#games">🎮 Games</a>
+            <a href="#about">ℹ️ About</a>
+            <a href="#contact">📞 Contact</a>
+        </div>
+    </nav>
 
-    <main>
-        <div id="game-grid" class="game-grid">
+    <main id="games">
+        
+        <div class="game-section">
+            <h2 class="section-title">All 82 Games (Just for you!)</h2>
+            <div class="game-row">
             
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/10minutestilldawn.html', '10 Minutes Till Dawn')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/10minutestilldawn.png" alt="10 Minutes Till Dawn Icon">
-                <h3>10 Minutes Till Dawn</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Survive the endless horde!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/1v1lol.html', '1v1.LOL')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/1v1lol.png" alt="1v1.LOL Icon">
-                <h3>1v1.LOL</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Competitive shooter and building game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/amandatheadventurer.html', 'Amanda the Adventurer')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/amandatheadventurer.png" alt="Amanda the Adventurer Icon">
-                <h3>Amanda the Adventurer</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Spooky children's show horror game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/badparenting.html', 'Bad Parenting')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/badparenting.png" alt="Bad Parenting Icon">
-                <h3>Bad Parenting</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Chaotic family life simulator.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/baldisbasics.html', 'Baldi\'s Basics')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/baldisbasics.png" alt="Baldi's Basics Icon">
-                <h3>Baldi's Basics</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Education and learning horror game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bankrobbery2.html', 'Bank Robbery 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bankrobbery2.png" alt="Bank Robbery 2 Icon">
-                <h3>Bank Robbery 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Plan and execute the perfect heist.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/baseballbros.html', 'Baseball Bros')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/baseballbros.png" alt="Baseball Bros Icon">
-                <h3>Baseball Bros</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Fast-paced baseball action.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketballstars.html', 'Basketball Stars')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketballstars.png" alt="Basketball Stars Icon">
-                <h3>Basketball Stars</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Online 2-player basketball.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketbros.html', 'Basket Bros')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketbros.png" alt="Basket Bros Icon">
-                <h3>Basket Bros</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Funny and physics-based basketball.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketrandom.html', 'Basket Random')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketrandom.png" alt="Basket Random Icon">
-                <h3>Basket Random</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Wacky and unpredictable 2-player basketball.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bendy.html', 'Bendy')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bendy.png" alt="Bendy and the Ink Machine Icon">
-                <h3>Bendy</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">First-person survival horror.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bindingofisaac.html', 'Binding of Isaac')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bindingofisaac.png" alt="The Binding of Isaac Icon">
-                <h3>The Binding of Isaac</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Dungeon crawling rogue-lite.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bitlife.html', 'BitLife')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bitlife.png" alt="BitLife Icon">
-                <h3>BitLife</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Life simulator where every choice matters.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bottlejump.html', 'Bottle Jump 3D')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bottlejump.png" alt="Bottle Jump 3D Icon">
-                <h3>Bottle Jump 3D</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Master the art of the bottle flip.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bouncemasters.html', 'Bouncemasters')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bouncemasters.png" alt="Bouncemasters Icon">
-                <h3>Bouncemasters</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Launch a penguin as far as possible.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bowmasters.html', 'Bowmasters')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bowmasters.png" alt="Bowmasters Icon">
-                <h3>Bowmasters</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Aim and shoot physics game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/buckshotroulette.html', 'Buckshot Roulette')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/buckshotroulette.png" alt="Buckshot Roulette Icon">
-                <h3>Buckshot Roulette</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">A deadly game of chance.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/buildnow.html', 'BuildNow.gg')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/buildnow.png" alt="BuildNow.gg Icon">
-                <h3>BuildNow.gg</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Competitive online building and shooting.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cookieclicker.html', 'Cookie Clicker')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cookieclicker.png" alt="Cookie Clicker Icon">
-                <h3>Cookie Clicker</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The original incremental idle game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/crossyroad.html', 'Crossy Road')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/crossyroad.png" alt="Crossy Road Icon">
-                <h3>Crossy Road</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Why did the chicken cross the road?</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cuphead.html', 'Cuphead')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cuphead.png" alt="Cuphead Icon">
-                <h3>Cuphead</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Run-and-gun platform action.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cuttherope.html', 'Cut the Rope')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cuttherope.png" alt="Cut the Rope Icon">
-                <h3>Cut the Rope</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Feed the candy to Om Nom!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doodlejump.html', 'Doodle Jump')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doodlejump.png" alt="Doodle Jump Icon">
-                <h3>Doodle Jump</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Classic jumping platformer.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom.html', 'DOOM')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom.png" alt="DOOM Icon">
-                <h3>DOOM</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The original first-person shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom2.html', 'Doom 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom2.png" alt="Doom 2 Icon">
-                <h3>Doom 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">More demons, more guns.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom3.html', 'Doom 3')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom3.png" alt="Doom 3 Icon">
-                <h3>Doom 3</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The legendary horror shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/drifthunters.html', 'Drift Hunters')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/drifthunters.png" alt="Drift Hunters Icon">
-                <h3>Drift Hunters</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">3D drifting simulation.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/drivemad.html', 'Drive Mad')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/drivemad.png" alt="Drive Mad Icon">
-                <h3>Drive Mad</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Extreme truck driving physics.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/endoparasitic.html', 'Endoparasitic')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/endoparasitic.png" alt="Endoparasitic Icon">
-                <h3>Endoparasitic</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Body horror survival game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/escaperoad.html', 'Escape Road')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/escaperoad.png" alt="Escape Road Icon">
-                <h3>Escape Road</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Race to freedom on the highway.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/escaperoad2.html', 'Escape Road 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/escaperoad2.png" alt="Escape Road 2 Icon">
-                <h3>Escape Road 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The thrilling sequel!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fallout.html', 'Fallout')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fallout.png" alt="Fallout Icon">
-                <h3>Fallout</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Classic post-apocalyptic RPG.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/flappybird.html', 'Flappy Bird')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/flappybird.png" alt="Flappy Bird Icon">
-                <h3>Flappy Bird</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The infamous tap-to-fly game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf1.html', 'FNAF 1')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf1.png" alt="Five Nights at Freddy's 1 Icon">
-                <h3>FNAF 1</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The original survival horror experience.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf2.html', 'FNAF 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf2.png" alt="Five Nights at Freddy's 2 Icon">
-                <h3>FNAF 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">New animatronics and no doors.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf3.html', 'FNAF 3')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf3.png" alt="Five Nights at Freddy's 3 Icon">
-                <h3>FNAF 3</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Meet Springtrap.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf4.html', 'FNAF 4')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf4.png" alt="Five Nights at Freddy's 4 Icon">
-                <h3>FNAF 4</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The final chapter (original series).</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf4halloween.html', 'FNAF 4 Halloween')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf4halloween.png" alt="FNAF 4 Halloween Icon">
-                <h3>FNAF 4: Halloween</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Spooky seasonal update.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/footballbros.html', 'Football Bros')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/footballbros.png" alt="Football Bros Icon">
-                <h3>Football Bros</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Two-player football chaos.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fruitninja.html', 'Fruit Ninja')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fruitninja.png" alt="Fruit Ninja Icon">
-                <h3>Fruit Ninja</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Slice the fruit, avoid the bombs.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/geometrydash.html', 'Geometry Dash')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/geometrydash.png" alt="Geometry Dash Lite Icon">
-                <h3>Geometry Dash</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Rhythm-based platformer.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/gettingoverit.html', 'Getting Over It')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/gettingoverit.png" alt="Getting Over It Icon">
-                <h3>Getting Over It</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">A game about tremendous frustration.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny1.html', 'Granny 1')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny1.png" alt="Granny 1 Icon">
-                <h3>Granny 1</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Escape the house of Granny.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny2.html', 'Granny 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny2.png" alt="Granny 2 Icon">
-                <h3>Granny 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Now with Grandpa!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny3.html', 'Granny 3')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny3.png" alt="Granny 3 Icon">
-                <h3>Granny 3</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The third installment of the series.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/halflife.html', 'Half-Life')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/halflife.png" alt="Half-Life Icon">
-                <h3>Half-Life</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Award-winning sci-fi shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/hollowknight.html', 'Hollow Knight')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/hollowknight.png" alt="Hollow Knight Icon">
-                <h3>Hollow Knight</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Acclaimed Metroidvania adventure.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/jetpackjoyride.html', 'Jetpack Joyride')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/jetpackjoyride.png" alt="Jetpack Joyride Icon">
-                <h3>Jetpack Joyride</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Endless runner with a jetpack!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/johnnytrigger.html', 'Johnny Trigger')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/johnnytrigger.png" alt="Johnny Trigger Icon">
-                <h3>Johnny Trigger</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Stylish slow-motion shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten.html', 'Kindergarten')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten.png" alt="Kindergarten Icon">
-                <h3>Kindergarten</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">A dark comedy point-and-click game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten2.html', 'Kindergarten 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten2.png" alt="Kindergarten 2 Icon">
-                <h3>Kindergarten 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The sequel with more strange antics.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten3.html', 'Kindergarten 3')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten3.png" alt="Kindergarten 3 Icon">
-                <h3>Kindergarten 3</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The third chapter in the twisted school.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/learntofly.html', 'Learn to Fly')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/learntofly.png" alt="Learn to Fly Icon">
-                <h3>Learn to Fly</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Help the penguin learn to fly!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/melonplayground.html', 'Melon Playground')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/melonplayground.png" alt="Melon Playground Icon">
-                <h3>Melon Playground</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Physics sandbox fun.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/minecraft.html', 'Minecraft')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/minecraft.png" alt="Minecraft Icon">
-                <h3>Minecraft</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Block-building survival classic.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/nazizombies.html', 'Nazi Zombies')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/nazizombies.png" alt="Nazi Zombies Icon">
-                <h3>Nazi Zombies</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Portable zombie shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ovo.html', 'OvO')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ovo.png" alt="OvO Icon">
-                <h3>OvO</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Fast-paced precision platformer.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ovo2.html', 'OvO 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ovo2.png" alt="OvO 2 Icon">
-                <h3>OvO 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The challenging sequel.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/papersplease.html', 'Papers, Please')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/papersplease.png" alt="Papers, Please Icon">
-                <h3>Papers, Please</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">A dystopian document thriller.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pixelgun.html', 'Pixel Gun Survival')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pixelgun.png" alt="Pixel Gun Survival Icon">
-                <h3>Pixel Gun Survival</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Blocky multiplayer shooter.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pizzeriasimulator.html', 'Pizzeria Simulator')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pizzeriasimulator.png" alt="Pizzeria Simulator Icon">
-                <h3>Pizzeria Simulator</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Build and survive your own pizzeria.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/plantsvszombies.html', 'Plants vs Zombies')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/plantsvszombies.png" alt="Plants vs Zombies Icon">
-                <h3>Plants vs Zombies</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Defend your lawn with plants.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/plantsvszombies2.html', 'Plants vs Zombies 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/plantsvszombies2.png" alt="Plants vs Zombies 2 Icon">
-                <h3>Plants vs Zombies 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Time travel to fight more zombies.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pokemon.html', 'Pokemon Red')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pokemon.png" alt="Pokemon Icon">
-                <h3>Pokemon Red</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Gotta catch 'em all!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/polytrack.html', 'Poly Track')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/polytrack.png" alt="Poly Track Icon">
-                <h3>Poly Track</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Stylized 3D racing game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/raft.html', 'Raft')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/raft.png" alt="Raft Icon">
-                <h3>Raft</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Ocean survival and building.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ragdollarchers.html', 'Ragdoll Archers')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ragdollarchers.png" alt="Ragdoll Archers Icon">
-                <h3>Ragdoll Archers</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Wacky archery physics.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/repo.html', 'Repo')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/repo.png" alt="Repo Icon">
-                <h3>Repo</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Game coming soon!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/retrobowl.html', 'Retro Bowl')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/retrobowl.png" alt="Retro Bowl Icon">
-                <h3>Retro Bowl</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Classic 8-bit football management.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/retrobowlcollege.html', 'Retro Bowl College')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/retrobowlcollege.png" alt="Retro Bowl College Icon">
-                <h3>Retro Bowl College</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Take your team to the College Championship.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/schoolboyrunaway.html', 'Schoolboy Runaway')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/schoolboyrunaway.png" alt="Schoolboy Runaway Icon">
-                <h3>Schoolboy Runaway</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Escape the bullies and the principal.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/sisterlocation.html', 'Sister Location')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/sisterlocation.png" alt="Sister Location Icon">
-                <h3>Sister Location</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">FNAF underground experience.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slenderman.html', 'Slender Man')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slenderman.png" alt="Slender Man Icon">
-                <h3>Slender Man</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Collect the 8 pages.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slimerancher.html', 'Slime Rancher')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slimerancher.png" alt="Slime Rancher Icon">
-                <h3>Slime Rancher</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Explore a beautiful, bouncy planet.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slitherio.html', 'Slither.io')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slitherio.png" alt="Slither.io Icon">
-                <h3>Slither.io</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Eat, grow, and avoid others.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slope.html', 'Slope')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slope.png" alt="Slope Icon">
-                <h3>Slope</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Avoid obstacles in this rolling ball game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/smashkarts.html', 'Smash Karts')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/smashkarts.png" alt="Smash Karts Icon">
-                <h3>Smash Karts</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Multiplayer battle kart racing.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/snowrider.html', 'Snow Rider 3D')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/snowrider.png" alt="Snow Rider 3D Icon">
-                <h3>Snow Rider 3D</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Sleigh racing in the snow.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/stealabrainrot.html', 'Steal A Brainrot')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/stealabrainrot.png" alt="Steal A Brainrot Icon">
-                <h3>Steal A Brainrot</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Funny stealth action game.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/subwaysurfers.html', 'Subway Surfers')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/subwaysurfers.png" alt="Subway Surfers Icon">
-                <h3>Subway Surfers</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Endless runner on the train tracks.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/superhot.html', 'SUPERHOT')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/superhot.png" alt="SUPERHOT Icon">
-                <h3>SUPERHOT</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Time moves only when you move.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/supermario64.html', 'Super Mario 64')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/supermario64.png" alt="Super Mario 64 Icon">
-                <h3>Super Mario 64</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The classic 3D platformer.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/supermariobros.html', 'Super Mario Bros')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/supermariobros.png" alt="Super Mario Bros Icon">
-                <h3>Super Mario Bros</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The original 2D plumber adventure.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/survivalrace.html', 'Survival Race')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/survivalrace.png" alt="Survival Race Icon">
-                <h3>Survival Race</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Race to stay alive!</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/templerun2.html', 'Temple Run 2')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/templerun2.png" alt="Temple Run 2 Icon">
-                <h3>Temple Run 2</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">The popular endless running sequel.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/thatsnotomyneighbor.html', 'That\'s Not My Neighbor')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/thatsnotmyneighbor.png" alt="That\'s Not My Neighbor Icon">
-                <h3>That's Not My Neighbor</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Identify the doppelgänger.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/thebackrooms.html', 'The Backrooms')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/thebackrooms.png" alt="The Backrooms Icon">
-                <h3>The Backrooms</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Navigate the infinite, empty space.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/theyarecoming.html', 'They Are Coming')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/theyarecoming.png" alt="They Are Coming Icon">
-                <h3>They Are Coming</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Defend yourself against the waves.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/tinyfishing.html', 'Tiny Fishing')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/tinyfishing.png" alt="Tiny Fishing Icon">
-                <h3>Tiny Fishing</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Relaxing fishing simulator.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/tombofthemask.html', 'Tomb Of The Mask')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/tombofthemask.png" alt="Tomb Of The Mask Icon">
-                <h3>Tomb Of The Mask</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Arcade maze runner.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ultimatecustomnight.html', 'Ultimate Custom Night')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ultimatecustomnight.png" alt="Ultimate Custom Night Icon">
-                <h3>Ultimate Custom Night</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Customizable FNAF challenge.</p>
-            </div>
-
-            <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ultrakill.html', 'ULTRAKILL')">
-                <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ultrakill.png" alt="ULTRAKILL Icon">
-                <h3>ULTRAKILL</h3>
-                <p style="font-size:0.8em; color:var(--color-text-light);">Fast-paced retro FPS action.</p>
-            </div>
-
-            </div>
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/10minutestilldawn.html', '10 Minutes Till Dawn')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/10minutestilldawn.png" alt="10 Minutes Till Dawn Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>10 Minutes Till Dawn</h3>
+                        <p>Survive the endless horde!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/1v1lol.html', '1v1.LOL')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/1v1lol.png" alt="1v1.LOL Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>1v1.LOL</h3>
+                        <p>Competitive shooter and building game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/amandatheadventurer.html', 'Amanda the Adventurer')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/amandatheadventurer.png" alt="Amanda the Adventurer Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Amanda the Adventurer</h3>
+                        <p>Spooky children's show horror game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/badparenting.html', 'Bad Parenting')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/badparenting.png" alt="Bad Parenting Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bad Parenting</h3>
+                        <p>Chaotic family life simulator.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/baldisbasics.html', 'Baldi\'s Basics')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/baldisbasics.png" alt="Baldi's Basics Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Baldi's Basics</h3>
+                        <p>Education and learning horror game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bankrobbery2.html', 'Bank Robbery 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bankrobbery2.png" alt="Bank Robbery 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bank Robbery 2</h3>
+                        <p>Plan and execute the perfect heist.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/baseballbros.html', 'Baseball Bros')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/baseballbros.png" alt="Baseball Bros Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Baseball Bros</h3>
+                        <p>Fast-paced baseball action.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketballstars.html', 'Basketball Stars')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketballstars.png" alt="Basketball Stars Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Basketball Stars</h3>
+                        <p>Online 2-player basketball.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketbros.html', 'Basket Bros')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketbros.png" alt="Basket Bros Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Basket Bros</h3>
+                        <p>Funny and physics-based basketball.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/basketrandom.html', 'Basket Random')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/basketrandom.png" alt="Basket Random Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Basket Random</h3>
+                        <p>Wacky and unpredictable 2-player basketball.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bendy.html', 'Bendy')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bendy.png" alt="Bendy and the Ink Machine Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bendy</h3>
+                        <p>First-person survival horror.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bindingofisaac.html', 'Binding of Isaac')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bindingofisaac.png" alt="The Binding of Isaac Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>The Binding of Isaac</h3>
+                        <p>Dungeon crawling rogue-lite.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bitlife.html', 'BitLife')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bitlife.png" alt="BitLife Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>BitLife</h3>
+                        <p>Life simulator where every choice matters.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bottlejump.html', 'Bottle Jump 3D')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bottlejump.png" alt="Bottle Jump 3D Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bottle Jump 3D</h3>
+                        <p>Master the art of the bottle flip.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bouncemasters.html', 'Bouncemasters')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bouncemasters.png" alt="Bouncemasters Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bouncemasters</h3>
+                        <p>Launch a penguin as far as possible.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/bowmasters.html', 'Bowmasters')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/bowmasters.png" alt="Bowmasters Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Bowmasters</h3>
+                        <p>Aim and shoot physics game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/buckshotroulette.html', 'Buckshot Roulette')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/buckshotroulette.png" alt="Buckshot Roulette Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Buckshot Roulette</h3>
+                        <p>A deadly game of chance.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/buildnow.html', 'BuildNow.gg')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/buildnow.png" alt="BuildNow.gg Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>BuildNow.gg</h3>
+                        <p>Competitive online building and shooting.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cookieclicker.html', 'Cookie Clicker')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cookieclicker.png" alt="Cookie Clicker Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Cookie Clicker</h3>
+                        <p>The original incremental idle game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/crossyroad.html', 'Crossy Road')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/crossyroad.png" alt="Crossy Road Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Crossy Road</h3>
+                        <p>Why did the chicken cross the road?</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cuphead.html', 'Cuphead')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cuphead.png" alt="Cuphead Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Cuphead</h3>
+                        <p>Run-and-gun platform action.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/cuttherope.html', 'Cut the Rope')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/cuttherope.png" alt="Cut the Rope Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Cut the Rope</h3>
+                        <p>Feed the candy to Om Nom!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doodlejump.html', 'Doodle Jump')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doodlejump.png" alt="Doodle Jump Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Doodle Jump</h3>
+                        <p>Classic jumping platformer.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom.html', 'DOOM')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom.png" alt="DOOM Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>DOOM</h3>
+                        <p>The original first-person shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom2.html', 'Doom 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom2.png" alt="Doom 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Doom 2</h3>
+                        <p>More demons, more guns.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/doom3.html', 'Doom 3')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/doom3.png" alt="Doom 3 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Doom 3</h3>
+                        <p>The legendary horror shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/drifthunters.html', 'Drift Hunters')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/drifthunters.png" alt="Drift Hunters Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Drift Hunters</h3>
+                        <p>3D drifting simulation.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/drivemad.html', 'Drive Mad')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/drivemad.png" alt="Drive Mad Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Drive Mad</h3>
+                        <p>Extreme truck driving physics.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/endoparasitic.html', 'Endoparasitic')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/endoparasitic.png" alt="Endoparasitic Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Endoparasitic</h3>
+                        <p>Body horror survival game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/escaperoad.html', 'Escape Road')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/escaperoad.png" alt="Escape Road Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Escape Road</h3>
+                        <p>Race to freedom on the highway.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/escaperoad2.html', 'Escape Road 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/escaperoad2.png" alt="Escape Road 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Escape Road 2</h3>
+                        <p>The thrilling sequel!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fallout.html', 'Fallout')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fallout.png" alt="Fallout Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Fallout</h3>
+                        <p>Classic post-apocalyptic RPG.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/flappybird.html', 'Flappy Bird')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/flappybird.png" alt="Flappy Bird Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Flappy Bird</h3>
+                        <p>The infamous tap-to-fly game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf1.html', 'FNAF 1')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf1.png" alt="Five Nights at Freddy's 1 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>FNAF 1</h3>
+                        <p>The original survival horror experience.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf2.html', 'FNAF 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf2.png" alt="Five Nights at Freddy's 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>FNAF 2</h3>
+                        <p>New animatronics and no doors.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf3.html', 'FNAF 3')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf3.png" alt="Five Nights at Freddy's 3 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>FNAF 3</h3>
+                        <p>Meet Springtrap.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf4.html', 'FNAF 4')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf4.png" alt="Five Nights at Freddy's 4 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>FNAF 4</h3>
+                        <p>The final chapter (original series).</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fnaf4halloween.html', 'FNAF 4 Halloween')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fnaf4halloween.png" alt="FNAF 4 Halloween Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>FNAF 4: Halloween</h3>
+                        <p>Spooky seasonal update.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/footballbros.html', 'Football Bros')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/footballbros.png" alt="Football Bros Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Football Bros</h3>
+                        <p>Two-player football chaos.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/fruitninja.html', 'Fruit Ninja')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/fruitninja.png" alt="Fruit Ninja Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Fruit Ninja</h3>
+                        <p>Slice the fruit, avoid the bombs.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/geometrydash.html', 'Geometry Dash')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/geometrydash.png" alt="Geometry Dash Lite Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Geometry Dash</h3>
+                        <p>Rhythm-based platformer.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/gettingoverit.html', 'Getting Over It')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/gettingoverit.png" alt="Getting Over It Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Getting Over It</h3>
+                        <p>A game about tremendous frustration.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny1.html', 'Granny 1')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny1.png" alt="Granny 1 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Granny 1</h3>
+                        <p>Escape the house of Granny.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny2.html', 'Granny 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny2.png" alt="Granny 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Granny 2</h3>
+                        <p>Now with Grandpa!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/granny3.html', 'Granny 3')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/granny3.png" alt="Granny 3 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Granny 3</h3>
+                        <p>The third installment of the series.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/halflife.html', 'Half-Life')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/halflife.png" alt="Half-Life Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Half-Life</h3>
+                        <p>Award-winning sci-fi shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/hollowknight.html', 'Hollow Knight')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/hollowknight.png" alt="Hollow Knight Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Hollow Knight</h3>
+                        <p>Acclaimed Metroidvania adventure.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/jetpackjoyride.html', 'Jetpack Joyride')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/jetpackjoyride.png" alt="Jetpack Joyride Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Jetpack Joyride</h3>
+                        <p>Endless runner with a jetpack!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/johnnytrigger.html', 'Johnny Trigger')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/johnnytrigger.png" alt="Johnny Trigger Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Johnny Trigger</h3>
+                        <p>Stylish slow-motion shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten.html', 'Kindergarten')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten.png" alt="Kindergarten Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Kindergarten</h3>
+                        <p>A dark comedy point-and-click game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten2.html', 'Kindergarten 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten2.png" alt="Kindergarten 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Kindergarten 2</h3>
+                        <p>The sequel with more strange antics.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/kindergarten3.html', 'Kindergarten 3')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/kindergarten3.png" alt="Kindergarten 3 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Kindergarten 3</h3>
+                        <p>The third chapter in the twisted school.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/learntofly.html', 'Learn to Fly')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/learntofly.png" alt="Learn to Fly Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Learn to Fly</h3>
+                        <p>Help the penguin learn to fly!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/melonplayground.html', 'Melon Playground')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/melonplayground.png" alt="Melon Playground Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Melon Playground</h3>
+                        <p>Physics sandbox fun.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/minecraft.html', 'Minecraft')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/minecraft.png" alt="Minecraft Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Minecraft</h3>
+                        <p>Block-building survival classic.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/nazizombies.html', 'Nazi Zombies')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/nazizombies.png" alt="Nazi Zombies Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Nazi Zombies</h3>
+                        <p>Portable zombie shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ovo.html', 'OvO')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ovo.png" alt="OvO Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>OvO</h3>
+                        <p>Fast-paced precision platformer.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ovo2.html', 'OvO 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ovo2.png" alt="OvO 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>OvO 2</h3>
+                        <p>The challenging sequel.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/papersplease.html', 'Papers, Please')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/papersplease.png" alt="Papers, Please Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Papers, Please</h3>
+                        <p>A dystopian document thriller.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pixelgun.html', 'Pixel Gun Survival')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pixelgun.png" alt="Pixel Gun Survival Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Pixel Gun Survival</h3>
+                        <p>Blocky multiplayer shooter.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pizzeriasimulator.html', 'Pizzeria Simulator')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pizzeriasimulator.png" alt="Pizzeria Simulator Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Pizzeria Simulator</h3>
+                        <p>Build and survive your own pizzeria.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/plantsvszombies.html', 'Plants vs Zombies')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/plantsvszombies.png" alt="Plants vs Zombies Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Plants vs Zombies</h3>
+                        <p>Defend your lawn with plants.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/plantsvszombies2.html', 'Plants vs Zombies 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/plantsvszombies2.png" alt="Plants vs Zombies 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Plants vs Zombies 2</h3>
+                        <p>Time travel to fight more zombies.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/pokemon.html', 'Pokemon Red')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/pokemon.png" alt="Pokemon Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Pokemon Red</h3>
+                        <p>Gotta catch 'em all!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/polytrack.html', 'Poly Track')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/polytrack.png" alt="Poly Track Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Poly Track</h3>
+                        <p>Stylized 3D racing game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/raft.html', 'Raft')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/raft.png" alt="Raft Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Raft</h3>
+                        <p>Ocean survival and building.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ragdollarchers.html', 'Ragdoll Archers')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ragdollarchers.png" alt="Ragdoll Archers Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Ragdoll Archers</h3>
+                        <p>Wacky archery physics.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/repo.html', 'Repo')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/repo.png" alt="Repo Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Repo</h3>
+                        <p>Game coming soon!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/retrobowl.html', 'Retro Bowl')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/retrobowl.png" alt="Retro Bowl Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Retro Bowl</h3>
+                        <p>Classic 8-bit football management.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/retrobowlcollege.html', 'Retro Bowl College')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/retrobowlcollege.png" alt="Retro Bowl College Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Retro Bowl College</h3>
+                        <p>Take your team to the College Championship.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/schoolboyrunaway.html', 'Schoolboy Runaway')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/schoolboyrunaway.png" alt="Schoolboy Runaway Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Schoolboy Runaway</h3>
+                        <p>Escape the bullies and the principal.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/sisterlocation.html', 'Sister Location')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/sisterlocation.png" alt="Sister Location Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Sister Location</h3>
+                        <p>FNAF underground experience.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slenderman.html', 'Slender Man')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slenderman.png" alt="Slender Man Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Slender Man</h3>
+                        <p>Collect the 8 pages.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slimerancher.html', 'Slime Rancher')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slimerancher.png" alt="Slime Rancher Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Slime Rancher</h3>
+                        <p>Explore a beautiful, bouncy planet.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slitherio.html', 'Slither.io')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slitherio.png" alt="Slither.io Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Slither.io</h3>
+                        <p>Eat, grow, and avoid others.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/slope.html', 'Slope')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/slope.png" alt="Slope Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Slope</h3>
+                        <p>Avoid obstacles in this rolling ball game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/smashkarts.html', 'Smash Karts')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/smashkarts.png" alt="Smash Karts Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Smash Karts</h3>
+                        <p>Multiplayer battle kart racing.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/snowrider.html', 'Snow Rider 3D')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/snowrider.png" alt="Snow Rider 3D Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Snow Rider 3D</h3>
+                        <p>Sleigh racing in the snow.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/stealabrainrot.html', 'Steal A Brainrot')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/stealabrainrot.png" alt="Steal A Brainrot Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Steal A Brainrot</h3>
+                        <p>Funny stealth action game.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/subwaysurfers.html', 'Subway Surfers')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/subwaysurfers.png" alt="Subway Surfers Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Subway Surfers</h3>
+                        <p>Endless runner on the train tracks.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/superhot.html', 'SUPERHOT')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/superhot.png" alt="SUPERHOT Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>SUPERHOT</h3>
+                        <p>Time moves only when you move.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/supermario64.html', 'Super Mario 64')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/supermario64.png" alt="Super Mario 64 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Super Mario 64</h3>
+                        <p>The classic 3D platformer.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/supermariobros.html', 'Super Mario Bros')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/supermariobros.png" alt="Super Mario Bros Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Super Mario Bros</h3>
+                        <p>The original 2D plumber adventure.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/survivalrace.html', 'Survival Race')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/survivalrace.png" alt="Survival Race Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Survival Race</h3>
+                        <p>Race to stay alive!</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/templerun2.html', 'Temple Run 2')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/templerun2.png" alt="Temple Run 2 Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Temple Run 2</h3>
+                        <p>The popular endless running sequel.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/thatsnotomyneighbor.html', 'That\'s Not My Neighbor')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/thatsnotmyneighbor.png" alt="That\'s Not My Neighbor Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>That's Not My Neighbor</h3>
+                        <p>Identify the doppelgänger.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/thebackrooms.html', 'The Backrooms')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/thebackrooms.png" alt="The Backrooms Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>The Backrooms</h3>
+                        <p>Navigate the infinite, empty space.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/theyarecoming.html', 'They Are Coming')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/theyarecoming.png" alt="They Are Coming Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>They Are Coming</h3>
+                        <p>Defend yourself against the waves.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/tinyfishing.html', 'Tiny Fishing')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/tinyfishing.png" alt="Tiny Fishing Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Tiny Fishing</h3>
+                        <p>Relaxing fishing simulator.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/tombofthemask.html', 'Tomb Of The Mask')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/tombofthemask.png" alt="Tomb Of The Mask Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Tomb Of The Mask</h3>
+                        <p>Arcade maze runner.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ultimatecustomnight.html', 'Ultimate Custom Night')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ultimatecustomnight.png" alt="Ultimate Custom Night Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>Ultimate Custom Night</h3>
+                        <p>Customizable FNAF challenge.</p>
+                    </div>
+                </div>
+
+                <div class="card game-card" onclick="openEmbedURL('https://jeremy4401.github.io/StudyMath/games/ultrakill.html', 'ULTRAKILL')">
+                    <div class="card-image-container">
+                        <img src="https://jeremy4401.github.io/StudyMath/thumbnails/ultrakill.png" alt="ULTRAKILL Icon">
+                    </div>
+                    <div class="card-details">
+                        <h3>ULTRAKILL</h3>
+                        <p>Fast-paced retro FPS action.</p>
+                    </div>
+                </div>
+                
+                </div>
+        </div>
+        
+        <div id="home" style="min-height: 50vh; padding: 40px; text-align: center;">
+            <h2 class="section-title">Welcome Home!</h2>
+            <p>This is the main content area for your StudyMath site.</p>
+        </div>
+        <div id="about" style="min-height: 50vh; padding: 40px; text-align: center;">
+            <h2 class="section-title">About This Project</h2>
+            <p>More information about the site and its purpose.</p>
+        </div>
+        <div id="contact" style="min-height: 50vh; padding: 40px; text-align: center;">
+            <h2 class="section-title">Contact Us</h2>
+            <p>How to get in touch.</p>
+        </div>
+
     </main>
 
     <div id="embed-container">
@@ -755,6 +1206,7 @@
         function openEmbedURL(url, title) {
             document.getElementById('game-iframe').src = url;
             document.getElementById('embed-container').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent scrolling the main page
             if (title) {
                 document.title = title + ' | Game Loaded';
             }
@@ -763,6 +1215,7 @@
         function closeEmbed() {
             document.getElementById('game-iframe').src = '';
             document.getElementById('embed-container').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Re-enable scrolling
             document.title = '🎄 StudyMath Game Library 🎅'; 
         }
 
@@ -773,7 +1226,6 @@
         });
 
         // --- VISUAL EFFECTS GENERATION ---
-        
         function createFallingElements(containerId, elementType, className, count, minSize, maxSize, minDuration, maxDuration, content = null) {
             const container = document.getElementById(containerId);
             if (!container) return;
