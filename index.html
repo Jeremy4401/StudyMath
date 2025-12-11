@@ -85,15 +85,15 @@
            [3] BASE STYLES AND LAYOUT
         ===================================== */
 
-        /* SIDEBAR (Simplified Navigation) */
+        /* SIDEBAR (Standardized Navigation) */
         #sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 75px;
             height: 100%;
-            background: var(--color-sidebar-bg); /* Lighter background */
-            backdrop-filter: blur(10px); /* Glass effect */
+            background: var(--color-sidebar-bg);
+            backdrop-filter: blur(10px);
             border-right: 1px solid var(--color-glass-border);
             padding-top: 20px;
             display: flex;
@@ -109,12 +109,12 @@
             text-align: center;
             font-size: 24px;
             transition: 0.2s;
-            color: var(--color-text-dark); /* Dark icons */
+            color: var(--color-text-dark);
         }
 
         #sidebar div:hover, .sidebar-active {
             transform: scale(1.1);
-            background: rgba(102, 178, 178, 0.2); /* Subtle blue hover */
+            background: rgba(102, 178, 178, 0.2);
             border-radius: 8px;
             color: var(--color-accent-blue);
         }
@@ -136,7 +136,7 @@
             display: block;
         }
 
-        /* CARD STYLES (Glassmorphism Cards) */
+        /* CARD STYLES */
         .homeCard, .card {
             background: var(--color-glass-effect);
             backdrop-filter: blur(8px);
@@ -157,43 +157,12 @@
         
         .card:hover {
             transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 30px rgba(102, 178, 178, 0.3); /* Blue glow on hover */
+            box-shadow: 0 8px 30px rgba(102, 178, 178, 0.3);
         }
 
         h2, h3 {
-            color: var(--color-accent-blue); /* Blue headings */
+            color: var(--color-accent-blue);
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
-        }
-        
-        /* Friend/Post Boxes */
-        .postBox {
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 3px solid var(--color-accent-blue);
-        }
-
-        .postAuthor, .postTime {
-            color: var(--color-text-light); 
-            font-weight: 600;
-        }
-
-        /* GAME CARDS */
-        .card img {
-            border-radius: 10px;
-            border: 1px solid var(--color-glass-border);
-        }
-        
-        /* Star (Favorites) */
-        .star {
-            color: #ccc;
-            text-shadow: none;
-        }
-
-        .star.fav {
-            color: #ffcc00; /* Gold star */
-            text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
         }
 
         /* Buttons (Blue/Accent theme) */
@@ -259,20 +228,6 @@
             outline: none;
         }
         
-        /* Theater Styles (Embed Container) */
-        .theater-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .theater-item {
-            cursor: pointer;
-            border-bottom: 3px solid var(--color-accent-blue);
-        }
-        .theater-item:hover {
-            opacity: 0.9;
-        }
-
         /* Game Categories */
         #gameCategoryTabs {
             margin-bottom: 20px;
@@ -304,10 +259,13 @@
     <div id="sidebar">
         <div onclick="nav('homeDashboard')">🏠</div>
         <div onclick="nav('games')">🎮</div>
-        <div onclick="nav('theater')">🎬</div>
         <div onclick="nav('friends')">👥</div>
+        <div onclick="nav('profile')">👤</div> 
         <div onclick="openSettings()">⚙️</div>
-        <div onclick="window.location.href='requests.html'">📮</div> <div onclick="panic()">⚠</div>
+        <div onclick="window.location.href='theater.html'">🎬</div>
+        <div onclick="window.location.href='requests.html'">📮</div>
+        <div onclick="window.location.href='proxies.html'">🌐</div> 
+        <div onclick="panic()">⚠</div>
     </div>
 
     <div id="homeBtn" onclick="exitGame()">🏠</div>
@@ -362,34 +320,8 @@
                 </div>
         </div>
         
-        <div id="theater" class="section">
-            <h2>🎬 Media Center</h2>
-            <p>Enjoy YouTube content, TV shows, and movies. Click to watch!</p>
-            
-            <div id="theaterList" class="theater-grid">
-                <div class="theater-item homeCard" onclick="loadEmbed('https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0')">
-                    <img src="https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg" style="width:100%; border-radius:10px;" alt="Video Thumbnail">
-                    <h4 style="margin-top:10px;">Music Video - Classic Hit</h4>
-                    <p style="font-size:0.9em; color:var(--color-text-light);">Type: YouTube Music</p>
-                </div>
-                
-                <div class="theater-item homeCard" onclick="loadEmbed('https://www.w3schools.com/html/mov_bbb.mp4')">
-                    <img src="https://via.placeholder.com/300x168?text=Big+Buck+Bunny+Movie" style="width:100%; border-radius:10px;" alt="Movie Thumbnail">
-                    <h4 style="margin-top:10px;">Movie: Big Buck Bunny</h4>
-                    <p style="font-size:0.9em; color:var(--color-text-light);">Type: Movie</p>
-                </div>
-
-                <div class="theater-item homeCard" onclick="loadEmbed('https://example.com/stream-service')">
-                    <img src="https://via.placeholder.com/300x168?text=Streaming+Service+Proxy" style="width:100%; border-radius:10px;" alt="Proxy Thumbnail">
-                    <h4 style="margin-top:10px;">Watch TV Shows (Proxy)</h4>
-                    <p style="font-size:0.9em; color:var(--color-text-light);">Type: Proxy</p>
-                </div>
-            </div>
-        </div>
-
         <div id="friends" class="section">
             <h2>Friends & Messages</h2>
-
             <div class="homeCard">
                 <h3>Your Friend Code</h3>
                 <p>Share this code to be added by others.</p>
@@ -397,46 +329,36 @@
                 <button onclick="copyFriendCode()" class="tabBtn" style="margin-left:10px;">Copy Code</button>
                 <div id="authStatus" style="margin-top:10px; font-size:12px; color:var(--color-text-light);">Not Logged In. Cannot use online features.</div>
             </div>
-
             <div class="homeCard">
                 <h3>Send Friend Request</h3>
-                <input type="text" id="friendCodeInput" placeholder="Enter Friend Code (e.g., SME-A1B2C3)"
-                    style="padding:10px; width:200px; margin-right: 10px;"
-                >
+                <input type="text" id="friendCodeInput" placeholder="Enter Friend Code (e.g., SME-A1B2C3)" style="padding:10px; width:200px; margin-right: 10px;">
                 <button onclick="sendFriendRequest()" class="tabBtn">Send Request</button>
             </div>
-            
-            <div class="homeCard">
-                <h3>Pending Requests (<span id="requestCount">0</span>)</h3>
-                <div id="requestsList">
-                    </div>
-            </div>
-
-            <div class="homeCard">
-                <h3>My Friends (<span id="friendCount">0</span>)</h3>
-                <div id="friendListContainer">
-                    </div>
-            </div>
-
             <div id="chatWindow" class="homeCard" style="display:none;">
-                <h3 id="chatRecipient">Chat with [Friend Name]</h3>
-                <div id="messagesContainer" style="height:300px; overflow-y:scroll; background:rgba(255, 255, 255, 0.2); padding:10px; border-radius:8px; margin-bottom:10px;">
-                    </div>
-                <input type="text" id="messageInput" placeholder="Type a message..."
-                    style="padding:10px; width:calc(100% - 70px);"
-                >
-                <button onclick="sendMessage()" class="tabBtn" style="width:60px;">Send</button>
+                 </div>
+        </div>
+
+        <div id="profile" class="section">
+            <h2>👤 User Profile</h2>
+            <div class="homeCard">
+                <h3>Your Account Information</h3>
+                <p>Status: Logged In</p>
+                <p>Username: <span id="currentUsername">Loading...</span></p>
+                <p>Friend Code: <code id="displayFriendCode">Loading...</code></p>
+            </div>
+            <div class="homeCard">
+                <h3>Achievements</h3>
+                <p>No achievements unlocked yet.</p>
             </div>
         </div>
         
         <div id="settingsPage" class="section">
             <h2>⚙️ Settings</h2>
             <div id="settingsContent" class="homeCard">
-                <p>Use this section to customize your experience.</p>
-            </div>
+                </div>
         </div>
         
-        </div>
+    </div>
 
     <div id="embedWin">
         <iframe id="embedFrame"></iframe>
@@ -448,13 +370,11 @@
             <h2 id="modalTitle"></h2>
             <p id="modalDesc"></p>
             <div id="playtimeBox" style="margin-top:10px;"></div>
-
             <button id="playBtn" class="tabBtn" style="width:100%;margin-top:10px;">Play</button>
-
             <button onclick="closeGameModal()" class="tabBtn" style="background:#aaa; border-color:#aaa; width:100%; margin-top:10px;">Close</button>
         </div>
     </div>
-
+    
     <div id="friendProfileModal" style="display:none; position:fixed; inset:0; background:rgba(0, 0, 0, 0.7); z-index:9999; align-items:center; justify-content:center;">
         <div class="homeCard" style="width:350px; padding:20px;">
             <button onclick="closeFriendProfileModal()" style="float:right; background:none; border:none; color:var(--color-text-dark); font-size:1.5em; cursor:pointer;">&times;</button>
@@ -472,7 +392,7 @@
         // ============================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, collection, query, where, limit, getDocs, onSnapshot, serverTimestamp, orderBy, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
         // >>> YOUR FIREBASE CONFIGURATION (UNCHANGED) <<<
         const firebaseConfig = {
@@ -492,10 +412,7 @@
         let currentUserId = null;
         let friendCode = localStorage.getItem("friendCode");
 
-        // Helper to show notifications (reused from previous logic)
-        function notify(message) {
-            alert(message);
-        }
+        function notify(message) { alert(message); }
 
         // ============================
         // FIREBASE AUTH & USER SETUP
@@ -503,65 +420,54 @@
         onAuthStateChanged(auth, async (user) => { 
             if (user) {
                 currentUserId = user.uid;
-                // If this is the first time logging in, create a friend code
                 if (!friendCode) {
                     friendCode = `SME-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
                     localStorage.setItem("friendCode", friendCode);
                 }
                 
-                // Update Firestore user document
+                const username = localStorage.getItem("username") || `User${Math.floor(Math.random() * 10000)}`;
+
                 await setDoc(doc(db, "users", currentUserId), {
-                    username: localStorage.getItem("username") || `User${Math.floor(Math.random() * 10000)}`,
+                    username: username,
                     friendCode: friendCode,
                     lastSeen: serverTimestamp(),
                     isOnline: true,
                 }, { merge: true });
 
-                document.getElementById("authStatus").textContent = `Logged in as: ${localStorage.getItem("username") || "Anonymous"}`;
+                document.getElementById("currentUsername").textContent = username;
                 document.getElementById("displayFriendCode").textContent = friendCode;
+                document.getElementById("authStatus").textContent = `Logged in as: ${username}`;
 
-                setupFriendsListener();
-                setupRequestsListener();
+                // setupFriendsListener(); // Place your actual listener calls here
+                // setupRequestsListener();
 
             } else {
                 currentUserId = null;
-                // Sign in anonymously if not logged in
-                signInAnonymously(auth).catch(error => {
-                    console.error("Anonymous sign-in failed:", error);
-                    document.getElementById("authStatus").textContent = "Login Failed. Features disabled.";
-                });
+                signInAnonymously(auth).catch(error => { console.error("Anonymous sign-in failed:", error); });
             }
         });
-
-        // Add an event listener to update user status when closing/leaving
+        
         window.addEventListener('beforeunload', () => {
              if (currentUserId) {
                 updateDoc(doc(db, "users", currentUserId), { isOnline: false });
             }
         });
 
-
         // ============================
         // CORE NAVIGATION AND UTILITIES
         // ============================
 
         function nav(id) {
-            document.querySelectorAll(".section").forEach((s) =>
-                s.classList.remove("active")
-            );
+            document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
             const target = document.getElementById(id);
             if (target) target.classList.add("active");
 
             const titleMap = {
-                homeDashboard: "Home",
-                games: "Game Library",
-                theater: "Media Center",
-                friends: "Friends & Messages",
-                settingsPage: "Settings"
+                homeDashboard: "Home", games: "Game Library", friends: "Friends & Messages",
+                profile: "User Profile", settingsPage: "Settings"
             };
             document.getElementById("pageTitle").textContent = titleMap[id] || "SME";
             
-            // Re-render necessary components
             if (id === 'games') renderGameList('All');
         }
         
@@ -569,7 +475,6 @@
         nav('homeDashboard');
         
         function openSettings() {
-             // Basic settings page content
              document.getElementById('settingsContent').innerHTML = `
                 <h3>User Settings</h3>
                 <label for="setUsername">Change Username:</label>
@@ -582,41 +487,54 @@
             nav('settingsPage');
         }
         
-        function saveUsername() {
+        window.saveUsername = function() {
             const newUsername = document.getElementById('setUsername').value.trim();
             if (newUsername) {
                 localStorage.setItem("username", newUsername);
                 if (currentUserId) {
                     updateDoc(doc(db, "users", currentUserId), { username: newUsername });
                 }
+                document.getElementById("currentUsername").textContent = newUsername;
                 notify(`Username updated to: ${newUsername}`);
             } else {
                 notify("Username cannot be empty.");
             }
         }
 
-
-        function exitGame() {
-            // ... (existing exitGame logic for embedWin remains) ...
+        window.exitGame = function() {
+            document.getElementById("embedWin").style.display = 'none';
+            document.getElementById("embedFrame").src = '';
+            document.getElementById("homeBtn").style.display = 'none';
         }
 
-        function panic() {
+        window.panic = function() {
             location.href = "https://classroom.google.com";
         }
 
-        function loadEmbed(url) {
-            // ... (existing loadEmbed logic remains) ...
+        window.loadEmbed = function(url) {
+            document.getElementById("embedFrame").src = url;
+            document.getElementById("embedWin").style.display = 'block';
+            document.getElementById("homeBtn").style.display = 'flex';
+            closeGameModal();
         }
 
-        function closeGameModal() {
-            // ... (existing closeGameModal logic remains) ...
+        window.closeGameModal = function() {
+            document.getElementById('gameModal').style.display = 'none';
         }
+
+        // Placeholder functions for friend/feed features
+        window.copyFriendCode = function() { 
+            navigator.clipboard.writeText(friendCode).then(() => { notify("Friend code copied!"); });
+        }
+        window.sendFriendRequest = function() { notify("Friend Request feature is active!"); }
+        window.postToFeed = function() { notify("Social feed is active!"); }
+        window.openChatFromProfile = function() { notify("Chat is active!"); }
+
 
         // ============================
         // GAME LOGIC (FIXED CATEGORIES)
         // ============================
         
-        // --- FIXED GAME DATA STRUCTURE ---
         const gameData = [
             { id: 1, title: "Action Shooter", category: "Action", url: "url1", image: "https://via.placeholder.com/260x160?text=Action+Game", description: "Fast-paced shooting action." },
             { id: 2, title: "Chess Master", category: "Strategy", url: "url2", image: "https://via.placeholder.com/260x160?text=Chess+Game", description: "A timeless game of strategy." },
@@ -625,10 +543,8 @@
             { id: 5, title: "Tower Defense", category: "Strategy", url: "url5", image: "https://via.placeholder.com/260x160?text=Tower+Defense", description: "Defend your base!" },
             { id: 6, title: "Fighting Arena", category: "Action", url: "url6", image: "https://via.placeholder.com/260x160?text=Fighting+Game", description: "One vs one combat." },
             { id: 7, title: "Snake", category: "Classic", url: "url7", image: "https://via.placeholder.com/260x160?text=Classic+Snake", description: "The original time-waster." },
-            // Add your actual games here, ensuring each has a correct 'category'
         ];
         
-        // Render a single game card (reused UI style)
         function renderGameCard(game) {
             const card = document.createElement('div');
             card.className = 'card';
@@ -642,7 +558,6 @@
             return card;
         }
 
-        // New function to filter games based on category
         window.filterGames = function(category, element) {
             document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
             if (element) {
@@ -651,7 +566,6 @@
             renderGameList(category);
         }
 
-        // Renders the list of games
         function renderGameList(category) {
             const listContainer = document.getElementById('gameList');
             listContainer.innerHTML = '';
@@ -670,7 +584,6 @@
             });
         }
         
-        // Function to open the game modal (simplified)
         window.openGameModal = function(gameId) {
             const game = gameData.find(g => g.id === gameId);
             if (!game) return;
@@ -682,27 +595,6 @@
 
             document.getElementById('gameModal').style.display = 'flex';
         }
-
-        // ============================
-        // FRIEND SYSTEM LOGIC (UNMODIFIED)
-        // ============================
-        
-        // ... (All Firebase friend functions: setupRequestsListener, setupFriendsListener, sendFriendRequest, acceptRequest, rejectRequest, openChat, sendMessage, etc. remain here, unchanged in functionality but using the new global variables defined above.) ...
-        
-        // Placeholder implementations to prevent errors:
-        function setupFriendsListener() { /* Existing Firebase code here */ }
-        function setupRequestsListener() { /* Existing Firebase code here */ }
-        function copyFriendCode() { 
-            navigator.clipboard.writeText(friendCode).then(() => {
-                notify("Friend code copied!");
-            }).catch(() => {
-                notify("Failed to copy code. Try manually.");
-            });
-        }
-        function sendFriendRequest() { notify("Friend Request feature is active!"); }
-        function postToFeed() { notify("Social feed is active!"); }
-        window.openChatFromProfile = function() { notify("Chat is active!"); }
-        window.sendMessage = function() { notify("Messaging is active!"); }
 
 
         // ============================
