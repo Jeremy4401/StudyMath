@@ -1,206 +1,278 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Proxies</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SME Proxies - Unblock Sites</title>
+    <style>
+        /* =====================================
+           [1] SNOWY GLASS THEME VARIABLES
+        ===================================== */
+        @font-face {
+            font-family: "Comic Sans MS";
+            src: local("Comic Sans MS");
+        }
 
-<style>
-/* THEME VARIABLES */
-:root {
-    --bg: #4a7a9e;
-    --bg2: #1a2a44;
-    --text: white;
-    --button: #1a2a44;
-    --button-hover: #2e4057;
-}
-.dark {
-    --bg: #111;
-    --bg2: #000;
-    --text: #fff;
-    --button: #333;
-    --button-hover: #444;
-}
+        :root {
+            --color-sky-light: #e0f2f7;
+            --color-sky-dark: #c0e0e8;
+            --color-snow: #f8f8f8;
+            --color-accent-blue: #66b2b2;
+            --color-text-dark: #33444c;
+            --color-glass-effect: rgba(255, 255, 255, 0.5);
+            --color-glass-border: rgba(255, 255, 255, 0.8);
+            --color-bg-primary: linear-gradient(180deg, var(--color-sky-light) 0%, var(--color-sky-dark) 100%);
+            --color-sidebar-bg: rgba(255, 255, 255, 0.7);
+            --color-button-hover: #7bd3d3;
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to bottom, var(--bg), var(--bg2));
-    color: var(--text);
-    font-family: Arial, sans-serif;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    transition: background .3s, color .3s;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            background: var(--color-bg-primary);
+            color: var(--color-text-dark);
+            font-family: "Comic Sans MS", cursive, sans-serif;
+            overflow-x: hidden;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
 
-/* PERFORMANCE MODE */
-.performance * {
-    image-rendering: pixelated;
-    filter: blur(0.2px);
-    transition: none !important;
-}
+        /* =====================================
+           [2] SIDEBAR STYLES (Copied from Launcher)
+        ===================================== */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 75px;
+            height: 100%;
+            background: var(--color-sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--color-glass-border);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
 
-/* SETTINGS PANEL */
-#settings-panel {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 260px;
-    height: 100%;
-    background: #222;
-    color: white;
-    padding: 20px;
-    transform: translateX(-100%);
-    transition: .35s;
-    z-index: 9999;
-}
-#settings-panel.open {
-    transform: translateX(0);
-}
+        #sidebar div {
+            padding: 15px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 24px;
+            transition: 0.2s;
+            color: var(--color-text-dark);
+        }
 
-#settings-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: var(--button);
-    color: var(--text);
-    border: none;
-    padding: 12px 18px;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
+        #sidebar div:hover, .sidebar-active {
+            transform: scale(1.1);
+            background: rgba(102, 178, 178, 0.2);
+            border-radius: 8px;
+            color: var(--color-accent-blue);
+        }
+        
+        /* =====================================
+           [3] MAIN CONTENT LAYOUT
+        ===================================== */
+        #main {
+            margin-left: 90px;
+            padding: 20px;
+            z-index: 5;
+            position: relative;
+        }
 
-/* PROXY PAGE CONTENT */
-.games-title {
-    font-size: 64px;
-    margin-top: 60px;
-}
+        .proxy-container {
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 40px);
+        }
 
-.buttons-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    padding: 20px;
-}
+        .proxy-box {
+            background: var(--color-glass-effect);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--color-glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
 
-.game-button {
-    background-color: var(--button);
-    color: var(--text);
-    border: none;
-    border-radius: 15px;
-    padding: 15px 25px;
-    font-size: 18px;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    transition: 0.3s;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}
-.game-button:hover {
-    background-color: var(--button-hover);
-}
+        .proxy-box h2 {
+            font-size: 32px;
+            color: var(--color-accent-blue);
+            text-align: center;
+            margin-bottom: 25px;
+        }
 
-.best-button {
-    background-color: var(--button-hover);
-    font-weight: bold;
-    font-size: 20px;
-}
+        .proxy-input {
+            width: calc(100% - 30px);
+            padding: 15px;
+            border: 1px solid var(--color-glass-border);
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.8);
+            font-size: 18px;
+            color: var(--color-text-dark);
+            transition: border-color 0.3s, box-shadow 0.3s;
+            margin-bottom: 20px;
+        }
 
-.back-button {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background-color: var(--button);
-    color: var(--text);
-    border: none;
-    border-radius: 15px;
-    padding: 15px 25px;
-    font-size: 18px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: 0.3s;
-}
-.back-button:hover {
-    background-color: var(--button-hover);
-}
-</style>
+        .launch-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--color-accent-blue);
+            color: var(--color-snow);
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .launch-btn:hover {
+            background: var(--color-button-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* IFRAME STYLES for the Proxy */
+        #proxyFrame {
+            width: 100%;
+            height: 80vh; 
+            border: 1px solid var(--color-glass-border);
+            border-radius: 15px;
+            display: none;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =====================================
+           [4] SNOW BACKGROUND ANIMATION
+        ===================================== */
+        #snow-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
+        }
+
+        .snowflake {
+            position: absolute;
+            background: var(--color-snow);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall linear infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+            opacity: 0;
+            filter: blur(0.5px);
+        }
+        
+        @keyframes fall {
+            0% {
+                opacity: 0;
+                transform: translateY(-10vh) scale(0.8);
+            }
+            5% {
+                opacity: 0.9;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(110vh) scale(1.2);
+            }
+        }
+    </style>
 </head>
+
 <body>
+    <div id="snow-layer"></div>
 
-<!-- SETTINGS BUTTON -->
-<button id="settings-button" onclick="openSettings()">Settings</button>
+    <div id="sidebar">
+        <div onclick="window.location.href='index.html'">🏠</div>
+        <div onclick="window.location.href='index.html#games'">🎮</div>
+        <div onclick="window.location.href='index.html#friends'">👥</div>
+        <div onclick="window.location.href='index.html#profile'">👤</div>
+        <div onclick="window.location.href='index.html#settingsPage'">⚙️</div>
+        <div onclick="window.location.href='theater.html'">🎬</div>
+        <div onclick="window.location.href='requests.html'">📮</div>
+        <div class="sidebar-active">🌐</div> <div onclick="panic()">⚠</div>
+    </div>
 
-<!-- SETTINGS PANEL -->
-<div id="settings-panel">
-    <h2>Settings</h2>
-    <button onclick="toggleDarkMode()">Dark Mode</button>
-    <button onclick="togglePerformance()">Performance Mode</button>
-    <hr>
-    <button onclick="exportSettings()">Export Settings</button>
-    <input type="file" onchange="importSettings(event)">
-</div>
+    <div id="main">
+        <div class="proxy-container">
+            <div class="proxy-box">
+                <h2>🌐 Launch Web Proxy</h2>
+                <input
+                    type="text"
+                    id="urlInput"
+                    class="proxy-input"
+                    placeholder="Enter URL (e.g., https://www.youtube.com)"
+                />
+                
+                <button onclick="launchProxy()" class="launch-btn">
+                    Launch Site <span style="font-size: 1.2em">🚀</span>
+                </button>
+            </div>
 
-<!-- PROXY PAGE -->
-<a href="index.html" class="back-button">Back</a>
-<h1 class="games-title">Proxies</h1>
+            <iframe id="proxyFrame" frameborder="0"></iframe>
+        </div>
+    </div>
 
-<div class="buttons-container">
-    <a href="https://starship-app.com/" class="game-button">Starship</a>
-    <a href="https://youtubeunblocker.onrender.com/" class="game-button">YouTube Unblocker</a>
-    <a href="https://ttgworld.net/play" class="game-button">TTG World</a>
-    <a href="https://sites.google.com/view/securedweb/home" class="game-button">Secured Web</a>
-    <a href="https://assessment.lhost.dev/" class="game-button best-button">Unblocked</a>
-</div>
+    <script>
+        function panic() {
+            location.href = "https://classroom.google.com"; 
+        }
 
-<script>
-/******** SETTINGS PANEL ********/
-function openSettings() {
-    document.getElementById("settings-panel").classList.toggle("open");
-}
+        function launchProxy() {
+            const url = document.getElementById('urlInput').value.trim();
+            const iframe = document.getElementById('proxyFrame');
+            
+            if (url) {
+                // Prepend 'https://' if missing for reliable embedding/proxy use
+                const finalUrl = url.startsWith('http') ? url : `https://${url}`;
+                
+                // IMPORTANT: In a real deployment, this URL must point to your *actual* proxy backend.
+                // Since this is client-side code, we'll just embed the URL directly, 
+                // but be aware this will fail if the site uses X-Frame-Options or CORS protection.
+                
+                // Placeholder for actual proxy integration:
+                // iframe.src = `/path/to/your/proxy?url=${encodeURIComponent(finalUrl)}`;
+                
+                iframe.src = finalUrl;
+                iframe.style.display = 'block';
+                // Scroll to the iframe after launch
+                iframe.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-/******** DARK MODE ********/
-function toggleDarkMode() {
-    document.body.classList.toggle("dark");
-}
+            } else {
+                alert("Please enter a URL to launch.");
+            }
+        }
 
-/******** PERFORMANCE MODE ********/
-function togglePerformance() {
-    document.body.classList.toggle("performance");
-}
+        // Snowflakes Script 
+        const snowLayer = document.getElementById('snow-layer');
+        function createSnowflake() {
+            const s = document.createElement("div");
+            s.classList.add("snowflake");
+            s.style.width = s.style.height = Math.random() * 4 + 1 + "px";
+            s.style.top = Math.random() * -10 + "vh";
+            s.style.left = Math.random() * 100 + "vw";
+            s.style.animationDuration = Math.random() * 12 + 8 + "s";
+            s.style.animationDelay = Math.random() * 6 + "s";
+            s.style.zIndex = Math.floor(Math.random() * 5);
 
-/******** EXPORT SETTINGS ********/
-function exportSettings() {
-    const data = {
-        dark: document.body.classList.contains("dark"),
-        performance: document.body.classList.contains("performance")
-    };
-    const blob = new Blob([JSON.stringify(data)], {type:"application/json"});
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = "settings.json";
-    a.click();
-}
-
-/******** IMPORT SETTINGS ********/
-function importSettings(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const r = new FileReader();
-    r.onload = e => {
-        const s = JSON.parse(e.target.result);
-        document.body.classList.toggle("dark", s.dark);
-        document.body.classList.toggle("performance", s.performance);
-    };
-    r.readAsText(file);
-}
-</script>
-
+            snowLayer.appendChild(s);
+            setTimeout(() => s.remove(), 20000);
+        }
+        setInterval(createSnowflake, 150);
+    </script>
 </body>
 </html>
