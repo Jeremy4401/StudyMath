@@ -16,23 +16,36 @@
 
         :root {
             /* Snowy Day Palette */
-            --color-sky-light: #e0f2f7; --color-sky-dark: #c0e0e8; --color-snow: #f8f8f8;
+            --color-sky-light: #e0f2f7;
+            --color-sky-dark: #c0e0e8;
+            --color-snow: #f8f8f8;
             --color-accent-blue: #66b2b2; /* Main highlight color */
-            --color-text-dark: #33444c; --color-text-light: #5a7d8a;
+            --color-text-dark: #33444c;
+            --color-text-light: #5a7d8a;
             --color-glass-effect: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
             --color-glass-border: rgba(255, 255, 255, 0.8);
             --color-bg-primary: linear-gradient(180deg, var(--color-sky-light) 0%, var(--color-sky-dark) 100%);
             --color-sidebar-bg: rgba(255, 255, 255, 0.7); /* Lighter sidebar */
-            --color-button-hover: #7bd3d3; --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --color-button-hover: #7bd3d3; /* Lighter blue */
+            --color-success: #4caf50;
+            --color-error: #e53935;
+            
+            /* Glass card specific settings */
+            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
             /* Theater specific variables (Light Mode) */
-            --bg: var(--color-bg-primary); --text: var(--color-text-dark);
-            --panel: rgba(255, 255, 255, 0.7); --accent: var(--color-accent-blue);
+            --bg: var(--color-bg-primary); 
+            --text: var(--color-text-dark);
+            --panel: rgba(255, 255, 255, 0.7); 
+            --accent: var(--color-accent-blue);
         }
 
         /* Dark Mode for Theater Section */
         .dark {
-            --bg: #1f1f1f; --text: #fff; --panel: #333; --accent: #4CAF50; 
+            --bg: #1f1f1f;
+            --text: #fff;
+            --panel: #333;
+            --accent: #4CAF50; 
         }
 
         body {
@@ -49,60 +62,154 @@
            [2] SNOW BACKGROUND ANIMATION (SHARED VISUALS)
         ===================================== */
         #snow-layer {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 100;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 100;
         }
 
         .snowflake {
-            position: absolute; background: var(--color-snow); border-radius: 50%;
-            pointer-events: none; animation: fall linear infinite;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.7); opacity: 0;
+            position: absolute;
+            background: var(--color-snow);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall linear infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
+            opacity: 0;
             filter: blur(0.5px);
         }
 
         @keyframes fall {
-            0% { opacity: 0; transform: translateY(-10vh) scale(0.8); }
-            5% { opacity: 0.9; }
-            100% { opacity: 0; transform: translateY(110vh) scale(1.2); }
+            0% {
+                opacity: 0;
+                transform: translateY(-10vh) scale(0.8);
+            }
+            5% {
+                opacity: 0.9;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(110vh) scale(1.2);
+            }
         }
         
         /* =====================================
-           [3] BASE STYLES AND LAYOUT (SHARED VISUALS)
+           [3] BASE STYLES AND LAYOUT
         ===================================== */
-        #sidebar { /* ... sidebar styles ... */ }
-        #main { margin-left: 90px; padding: 20px; z-index: 5; position: relative; }
 
-        .section { display: none; animation: fadeIn 0.5s ease-out; min-height: calc(100vh - 40px); }
-        .section.active { display: block; }
+        /* SIDEBAR (Standardized Navigation) - FIXED STYLES */
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            /* Set a proper fixed width */
+            width: 75px; 
+            height: 100%;
+            background: var(--color-sidebar-bg);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid var(--color-glass-border);
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        #sidebar div {
+            /* Make the click area large and center the icon */
+            padding: 15px; 
+            cursor: pointer;
+            text-align: center;
+            font-size: 24px;
+            transition: 0.2s;
+            color: var(--color-text-dark);
+            /* Ensure the area takes full width of the padded space */
+            width: 45px; 
+            /* Center the box within the sidebar */
+            margin: 0 auto; 
+        }
+
+        #sidebar div:hover, .sidebar-active {
+            transform: scale(1.1);
+            /* Apply the glass accent hover effect */
+            background: rgba(102, 178, 178, 0.2); 
+            border-radius: 8px;
+            color: var(--color-accent-blue);
+        }
+
+        /* MAIN */
+        #main {
+            margin-left: 90px;
+            padding: 20px;
+            z-index: 5;
+            position: relative;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+            min-height: calc(100vh - 40px); 
+        }
+
+        .section.active {
+            display: block;
+        }
         
+        /* CARD STYLES (Apply Glass Effect) */
         .homeCard, .card, .proxy-box, .download-box {
-            background: var(--color-glass-effect); backdrop-filter: blur(8px);
-            border: 1px solid var(--color-glass-border); padding: 20px;
-            border-radius: 15px; margin-bottom: 25px; box-shadow: var(--card-shadow);
+            background: var(--color-glass-effect);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--color-glass-border);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
             transition: transform 0.3s ease-out, box-shadow 0.3s;
         }
-        .card:hover { transform: translateY(-5px) scale(1.05); box-shadow: 0 8px 30px rgba(102, 178, 178, 0.3); }
+        .card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(102, 178, 178, 0.3);
+        }
 
-        h2, h3 { color: var(--color-accent-blue); text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05); }
+        h2, h3 {
+            color: var(--color-accent-blue);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        }
 
+        /* Buttons (Blue/Accent theme) */
         .tabBtn, .submit-btn, .download-btn, .nav-btn, .launch-btn {
-            padding: 10px 16px; border-radius: 20px; border: 2px solid var(--color-accent-blue);
-            background: var(--color-accent-blue); color: var(--color-snow); font-weight: bold;
-            transition: 0.2s; cursor: pointer;
+            padding: 10px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--color-accent-blue);
+            background: var(--color-accent-blue);
+            color: var(--color-snow);
+            font-weight: bold;
+            transition: 0.2s;
+            cursor: pointer;
         }
         .tabBtn:hover, .submit-btn:hover, .download-btn:hover, .launch-btn:hover {
-            background: var(--color-button-hover); border-color: var(--color-button-hover);
+            background: var(--color-button-hover); 
+            border-color: var(--color-button-hover);
             transform: translateY(-1px);
         }
         
+        /* Form Styles (Request/Proxy sections) */
         input[type="text"], textarea, select {
-            padding: 10px; border: 1px solid var(--color-glass-border); border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.7); color: var(--color-text-dark);
+            padding: 10px;
+            border: 1px solid var(--color-glass-border);
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.7);
+            color: var(--color-text-dark);
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         input:focus, textarea:focus, select:focus {
             border-color: var(--color-accent-blue);
-            box-shadow: 0 0 0 3px rgba(102, 178, 178, 0.3); outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 178, 178, 0.3);
+            outline: none;
         }
 
         @keyframes fadeIn {
@@ -110,22 +217,177 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* [4] GAME EMBED AND HOME BUTTON */
-        #embedWin, #theaterEmbedContainer { /* ... embed styles ... */ }
-        #homeBtn { /* ... home button styles ... */ }
+        /* =====================================
+           [4] GAME EMBED AND HOME BUTTON
+        ===================================== */
+        #embedWin, #theaterEmbedContainer {
+            position: fixed;
+            inset: 0;
+            background: black;
+            display: none;
+            z-index: 9000;
+        }
+        #embedFrame, #theaterEmbedFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
 
-        /* [5] REQUESTS SECTION STYLES */
-        .request-container { /* ... request styles ... */ }
-        
-        /* [6] THEATER SECTION STYLES */
-        .dark { /* ... dark mode styles ... */ }
-        .theater-header { /* ... header styles ... */ }
-        #theater-settings-panel { /* ... settings panel styles ... */ }
-        .scroller { /* ... scroller styles ... */ }
+        #homeBtn {
+            background: var(--color-glass-effect);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--color-glass-border);
+            color: var(--color-accent-blue);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+            cursor: pointer;
+            z-index: 10001; 
+        }
+        #homeBtn:hover { transform: scale(1.1); }
 
-        /* [7] PROXIES SECTION STYLES */
-        .proxy-container { /* ... proxy styles ... */ }
-        #proxyFrame { /* ... iframe styles ... */ }
+        /* =====================================
+           [5] REQUESTS SECTION STYLES
+        ===================================== */
+        .request-container {
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 40px);
+        }
+        .form-box {
+            width: 100%;
+            max-width: 450px;
+        }
+        .submit-btn {
+            width: 100%;
+            margin-top: 10px;
+        }
+        #form-message {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        /* =====================================
+           [6] THEATER SECTION STYLES
+        ===================================== */
+        .dark {
+            --bg: #1f1f1f;
+            --text: #fff;
+            --panel: #333;
+            --accent: #4CAF50; 
+        }
+        .theater-header {
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(10px);
+            color: var(--color-text-dark);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid var(--color-glass-border);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            margin-left: -20px; 
+            margin-right: -20px;
+            margin-bottom: 20px;
+        }
+        .dark .theater-header { background: #282828; color: white; border-bottom: 1px solid #444; }
+        #theater-settings-panel {
+            position: fixed;
+            top: 0;
+            left: 75px; 
+            width: 260px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--color-text-dark);
+            padding: 20px;
+            transform: translateX(-100%);
+            transition: 0.35s ease;
+            z-index: 9999;
+            border-right: 1px solid var(--color-glass-border);
+        }
+        #theater-settings-panel.open { transform: translateX(0); }
+        .dark #theater-settings-panel { background: #222; color: white; border-right: 1px solid #444; }
+        .scroller-container { position: relative; margin-top: 15px; }
+        .scroller {
+            display: flex;
+            overflow-x: auto;
+            gap: 12px;
+            scroll-behavior: smooth;
+            padding: 10px 0;
+        }
+        .scroller::-webkit-scrollbar { display: none; }
+        .arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 32px;
+            background: rgba(102, 178, 178, 0.7);
+            padding: 5px 10px;
+            border-radius: 6px;
+            color: white;
+            cursor: pointer;
+            user-select: none;
+            z-index: 50;
+        }
+        .movie-btn {
+            display: inline-block;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--color-glass-border);
+            color: var(--color-text-dark);
+            border-radius: 15px;
+            transition: background 0.2s, transform 0.2s;
+            margin: 5px;
+            white-space: nowrap;
+        }
+
+        /* =====================================
+           [7] PROXIES SECTION STYLES
+        ===================================== */
+        .proxy-container {
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: calc(100vh - 40px);
+        }
+        .proxy-box {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 50px;
+        }
+        .proxy-input {
+            width: calc(100% - 20px);
+            margin-bottom: 20px;
+        }
+        #proxyFrame {
+            width: 100%;
+            height: 80vh; 
+            border: 1px solid var(--color-glass-border);
+            border-radius: 15px;
+            display: none;
+            margin-top: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
     </style>
 </head>
 
@@ -246,6 +508,8 @@
                                 <option value="Game">Game Request (Name of game)</option>
                                 <option value="Proxy">Proxy Request (Need access to X site)</option>
                                 <option value="Feature">Feature Suggestion (New button/idea)</option>
+                                <option value="Bug">Report a Bug/Problem</option>
+                                <option value="Other">Other Suggestion</option>
                             </select>
                         </div>
 
@@ -387,13 +651,17 @@
         
     </div>
 
-    <div id="embedWin"> <iframe id="embedFrame"></iframe> </div>
+    <div id="embedWin">
+        <iframe id="embedFrame"></iframe>
+    </div>
+    
     <div id="theaterEmbedContainer">
         <iframe id="theaterEmbedFrame"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen>
         </iframe>
     </div>
+
     <div id="gameModal" style="display:none; position:fixed; inset:0; background:rgba(0, 0, 0, 0.5); z-index:9999; align-items:center; justify-content:center;">
         <div id="modalBox" class="homeCard" style="width:420px; padding:20px; box-shadow:0 0 30px rgba(102, 178, 178, 0.4);">
             <img id="modalImg" src="" style="width:100%;border-radius:10px;" />
@@ -405,14 +673,37 @@
         </div>
     </div>
     
+    <div id="friendProfileModal" style="display:none; position:fixed; inset:0; background:rgba(0, 0, 0, 0.7); z-index:9999; align-items:center; justify-content:center;">
+        <div class="homeCard" style="width:350px; padding:20px;">
+            <button onclick="closeFriendProfileModal()" style="float:right; background:none; border:none; color:var(--color-text-dark); font-size:1.5em; cursor:pointer;">&times;</button>
+            <div class="profileBanner" style="height:60px; background: var(--color-accent-blue);"></div>
+            <div id="modalFriendAvatar" class="profileAvatar" style="margin-top:-30px; background-size:cover;"></div>
+            <h2 id="modalFriendUsername" style="margin-top:10px;"></h2>
+            <p id="modalFriendStatus" style="color:var(--color-success);">Online</p>
+            <p id="modalFriendBio" style="margin-top:10px; opacity:0.8;"></p>
+            <button id="modalMessageBtn" onclick="openChatFromProfile()" class="tabBtn" style="margin-top:15px; width:100%;">Message</button>
+        </div>
+    </div>
+
     <script type="module">
-        // ... ALL JAVASCRIPT LOGIC IS HERE ...
+        // ============================
+        // FIREBASE INIT (V12 MODULES)
+        // ============================
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, updateDoc, serverTimestamp, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
         // >>> YOUR FIREBASE CONFIGURATION (UNCHANGED) <<<<
-        const firebaseConfig = { /* ... config ... */ };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBxXsXA1aoOLzDD-yNaZnHETgxPAJ-mbjw",
+            authDomain: "sme-loader.firebaseapp.com",
+            databaseURL: "https://sme-loader-default-rtdb.firebaseio.com",
+            projectId: "sme-loader",
+            storageBucket: "sme-loader.firebasestorage.app",
+            messagingSenderId: "427113600756",
+            appId: "1:427113600756:web:73227a309d4a2e6c51b0a1"
+        };
+
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
@@ -422,13 +713,55 @@
 
         function notify(message) { alert(message); }
 
-        // [FIREBASE AUTH & USER SETUP]
-        onAuthStateChanged(auth, async (user) => { /* ... auth logic ... */ });
-        window.addEventListener('beforeunload', () => { /* ... unload logic ... */ });
+        // ============================
+        // FIREBASE AUTH & USER SETUP
+        // ============================
+        onAuthStateChanged(auth, async (user) => { 
+            if (user) {
+                currentUserId = user.uid;
+                if (!friendCode) {
+                    friendCode = `SME-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
+                    localStorage.setItem("friendCode", friendCode);
+                }
+                
+                const username = localStorage.getItem("username") || `User${Math.floor(Math.random() * 10000)}`;
 
-        // [CORE NAVIGATION AND UTILITIES]
+                await setDoc(doc(db, "users", currentUserId), {
+                    username: username,
+                    friendCode: friendCode,
+                    lastSeen: serverTimestamp(),
+                    isOnline: true,
+                }, { merge: true });
+
+                document.getElementById("currentUsername").textContent = username;
+                document.getElementById("displayFriendCode").textContent = friendCode;
+                // Update the code in the profile section as well
+                const displayCode2 = document.getElementById("displayFriendCode2");
+                if (displayCode2) displayCode2.textContent = friendCode;
+
+                document.getElementById("authStatus").textContent = `Logged in as: ${username}`;
+
+            } else {
+                currentUserId = null;
+                signInAnonymously(auth).catch(error => { console.error("Anonymous sign-in failed:", error); });
+            }
+        });
+        
+        window.addEventListener('beforeunload', () => {
+             if (currentUserId) {
+                updateDoc(doc(db, "users", currentUserId), { isOnline: false });
+            }
+        });
+
+        // ============================
+        // CORE NAVIGATION AND UTILITIES
+        // ============================
+
         window.nav = function(id) {
+            // Hide all sections
             document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
+            
+            // Activate the target section
             const target = document.getElementById(id);
             if (target) target.classList.add("active");
 
@@ -439,49 +772,339 @@
                 requests: "Suggestion Box", proxies: "Web Proxy"
             };
             document.getElementById("pageTitle").textContent = titleMap[id] || "SME";
+
+            // Update sidebar active class
+            document.querySelectorAll('#sidebar div').forEach(div => div.classList.remove('sidebar-active'));
+            // Find the correct element to activate (simplified for this structure)
+            const iconMap = {
+                homeDashboard: '🏠', games: '🎮', friends: '👥', profile: '👤', settingsPage: '⚙️',
+                theater: '🎬', requests: '📮', proxies: '🌐', panic: '⚠'
+            };
+            const targetIcon = iconMap[id];
+            if (targetIcon) {
+                document.querySelectorAll('#sidebar div').forEach(div => {
+                    if (div.textContent.includes(targetIcon)) {
+                        div.classList.add('sidebar-active');
+                    }
+                });
+            }
             
+            // Special handling for sections
             if (id === 'games') renderGameList('All');
             if (id === 'proxies') document.getElementById('proxyFrame').style.display = 'none';
         }
-        nav('homeDashboard'); // Initial navigation
+        
+        // Initial navigation
+        nav('homeDashboard');
+        
+        window.openSettings = function() {
+             document.getElementById('settingsContent').innerHTML = `
+                <h3>User Settings</h3>
+                <label for="setUsername">Change Username:</label>
+                <input type="text" id="setUsername" placeholder="Enter new username" value="${localStorage.getItem("username") || ''}" style="width:100%; margin-bottom:15px;"><br>
+                <button onclick="saveUsername()" class="tabBtn">Save Username</button>
+                <hr style="margin: 20px 0; border-color: rgba(255, 255, 255, 0.5);"><br>
+                <h3>Launcher Options</h3>
+                <p>More options coming soon!</p>
+            `;
+            nav('settingsPage');
+        }
+        
+        window.saveUsername = function() {
+            const newUsername = document.getElementById('setUsername').value.trim();
+            if (newUsername) {
+                localStorage.setItem("username", newUsername);
+                if (currentUserId) {
+                    updateDoc(doc(db, "users", currentUserId), { username: newUsername });
+                }
+                document.getElementById("currentUsername").textContent = newUsername;
+                notify(`Username updated to: ${newUsername}`);
+            } else {
+                notify("Username cannot be empty.");
+            }
+        }
 
-        window.openSettings = function() { /* ... settings content loading ... */ nav('settingsPage'); }
-        window.saveUsername = function() { /* ... save username logic ... */ }
-        window.exitEmbed = function() { /* ... exit logic ... */ }
-        window.panic = function() { location.href = "https://classroom.google.com"; }
-        window.loadEmbed = function(url) { /* ... load embed logic ... */ }
-        window.closeGameModal = function() { document.getElementById('gameModal').style.display = 'none'; }
-        window.copyFriendCode = function() { /* ... copy logic ... */ }
+        window.exitEmbed = function() {
+            // Closes the game embed
+            document.getElementById("embedWin").style.display = 'none';
+            document.getElementById("embedFrame").src = '';
+            
+            // Closes the theater embed
+            document.getElementById("theaterEmbedContainer").style.display = 'none';
+            document.getElementById("theaterEmbedFrame").src = '';
+            
+            // Hide the exit button
+            document.getElementById("homeBtn").style.display = 'none';
+        }
+
+        window.panic = function() {
+            location.href = "https://classroom.google.com";
+        }
+
+        window.loadEmbed = function(url) {
+            document.getElementById("embedFrame").src = url;
+            document.getElementById("embedWin").style.display = 'block';
+            document.getElementById("homeBtn").style.display = 'flex';
+            closeGameModal();
+        }
+
+        window.closeGameModal = function() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        // Placeholder functions for friend/feed features
+        window.copyFriendCode = function() { 
+            navigator.clipboard.writeText(friendCode).then(() => { notify("Friend code copied!"); });
+        }
         window.sendFriendRequest = function() { notify("Friend Request feature is active!"); }
         window.postToFeed = function() { notify("Social feed is active!"); }
-        
-        // [GAME LOGIC]
-        const gameData = [ /* ... game data array ... */ ];
-        function renderGameCard(game) { /* ... render card logic ... */ }
-        window.filterGames = function(category, element) { /* ... filter logic ... */ renderGameList(category); }
-        function renderGameList(category) { /* ... render list logic ... */ }
-        window.openGameModal = function(gameId) { /* ... open modal logic ... */ }
+        window.openChatFromProfile = function() { notify("Chat is active!"); }
 
-        // [REQUESTS/SUGGESTION LOGIC]
-        const WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK_HERE"; 
+
+        // ============================
+        // GAME LOGIC (FIXED CATEGORIES)
+        // ============================
+        
+        const gameData = [
+            { id: 1, title: "Action Shooter", category: "Action", url: "url1", image: "https://via.placeholder.com/260x160?text=Action+Game", description: "Fast-paced shooting action." },
+            { id: 2, title: "Chess Master", category: "Strategy", url: "url2", image: "https://via.placeholder.com/260x160?text=Chess+Game", description: "A timeless game of strategy." },
+            { id: 3, title: "Retro Arcade", category: "Classic", url: "url3", image: "https://via.placeholder.com/260x160?text=Retro+Arcade", description: "Old school fun." },
+            { id: 4, title: "Cool Math Game", category: "Unblocked", url: "url4", image: "https://via.placeholder.com/260x160?text=Unblocked+Fun", description: "A popular unblocked game." },
+            { id: 5, title: "Tower Defense", category: "Strategy", url: "url5", image: "https://via.placeholder.com/260x160?text=Tower+Defense", description: "Defend your base!" },
+            { id: 6, title: "Fighting Arena", category: "Action", url: "url6", image: "https://via.placeholder.com/260x160?text=Fighting+Game", description: "One vs one combat." },
+            { id: 7, title: "Snake", category: "Classic", url: "url7", image: "https://via.placeholder.com/260x160?text=Classic+Snake", description: "The original time-waster." },
+        ];
+        
+        function renderGameCard(game) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.width = '260px'; // Added fixed width for layout
+            card.style.margin = '10px'; // Added margin for spacing
+            card.innerHTML = `
+                <img src="${game.image}" alt="${game.title}" width="100%" height="160px" style="object-fit:cover; border-radius:10px;">
+                <h3 style="margin-top:10px; margin-bottom:5px;">${game.title}</h3>
+                <p style="font-size:0.9em; color:var(--color-text-light);">${game.description.substring(0, 50)}...</p>
+                <p style="font-size:0.8em; font-style:italic;">Category: ${game.category}</p>
+                <button class="tabBtn" style="width:100%; margin-top:10px;" onclick="openGameModal(${game.id})">Details</button>
+            `;
+            return card;
+        }
+
+        window.filterGames = function(category, element) {
+            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
+            if (element) {
+                element.classList.add('active');
+            }
+            renderGameList(category);
+        }
+
+        function renderGameList(category) {
+            const listContainer = document.getElementById('gameList');
+            if (!listContainer) return;
+            listContainer.innerHTML = '';
+            
+            const filteredGames = category === 'All' 
+                ? gameData 
+                : gameData.filter(game => game.category === category);
+
+            if (filteredGames.length === 0) {
+                listContainer.innerHTML = `<p class="homeCard" style="width:90%;">No games found in the ${category} category.</p>`;
+                return;
+            }
+
+            filteredGames.forEach(game => {
+                listContainer.appendChild(renderGameCard(game));
+            });
+        }
+        
+        window.openGameModal = function(gameId) {
+            const game = gameData.find(g => g.id === gameId);
+            if (!game) return;
+
+            document.getElementById('modalImg').src = game.image;
+            document.getElementById('modalTitle').textContent = game.title;
+            document.getElementById('modalDesc').textContent = game.description;
+            document.getElementById('playBtn').onclick = () => loadEmbed(game.url);
+
+            document.getElementById('gameModal').style.display = 'flex';
+        }
+
+
+        // ============================
+        // REQUESTS/SUGGESTION LOGIC
+        // ============================
+
+        const WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK_HERE"; // IMPORTANT: Replace this placeholder
+        
         const requestForm = document.getElementById('requestForm');
         const formMessage = document.getElementById('form-message');
-        if (requestForm) { /* ... form submission logic ... */ }
 
-        // [THEATER LOGIC]
-        window.openTheaterEmbedURL = function(url) { /* ... theater embed logic ... */ }
-        window.showTheaterPage = function(pageId, element) { /* ... theater page switching logic ... */ }
-        window.openTheaterSettings = function() { /* ... settings panel logic ... */ }
-        window.toggleDarkMode = function() { /* ... dark mode logic ... */ }
-        if (localStorage.getItem('theaterDarkMode') === 'true') { document.getElementById('appBody').classList.add('dark'); }
-        window.scrollContent = function(id, direction) { /* ... scroll logic ... */ }
+        if (requestForm) {
+            requestForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
 
-        // [PROXY LOGIC]
-        window.launchProxy = function() { /* ... proxy launch logic ... */ }
+                const reqType = document.getElementById('reqType').value;
+                const reqDetail = document.getElementById('reqDetail').value;
+                const reqName = document.getElementById('reqName').value || 'Anonymous';
 
-        // [SNOWFLAKES]
+                // Basic validation
+                if (!reqType || !reqDetail) {
+                    formMessage.textContent = 'Please select a request type and provide details.';
+                    formMessage.className = 'error';
+                    formMessage.style.display = 'block';
+                    return;
+                }
+
+                const payload = {
+                    content: null,
+                    embeds: [{
+                        title: `📮 New Request: ${reqType}`,
+                        description: `**Details:**\n${reqDetail}`,
+                        color: 3447003, // Blue color for Discord embed
+                        fields: [
+                            { name: "Submitted By", value: reqName, inline: true },
+                            { name: "Time", value: new Date().toUTCString(), inline: true },
+                        ]
+                    }]
+                };
+
+                try {
+                    // This is commented out to prevent failure in a non-deployed environment
+                    /*
+                    const response = await fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Discord API error: ${response.status} ${response.statusText}`);
+                    }
+                    */
+
+                    formMessage.textContent = 'Request sent successfully! (Note: Actual Discord webhook is disabled in this demo).';
+                    formMessage.className = 'success';
+                    requestForm.reset();
+                    
+                } catch (error) {
+                    console.error('Error submitting request:', error);
+                    formMessage.textContent = 'Failed to send request. Check console for details.';
+                    formMessage.className = 'error';
+                }
+                formMessage.style.display = 'block';
+            });
+        }
+
+        // ============================
+        // THEATER LOGIC
+        // ============================
+
+        window.openTheaterEmbedURL = function(url) {
+            document.getElementById("theaterEmbedFrame").src = url;
+            document.getElementById("theaterEmbedContainer").style.display = 'block';
+            document.getElementById("homeBtn").style.display = 'flex';
+        }
+
+        window.showTheaterPage = function(pageId, element) {
+            document.querySelectorAll('.theater-page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId).style.display = 'block';
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            if (element) element.classList.add('active');
+        }
+        showTheaterPage('hub-page'); // Default to hub page
+
+        window.openTheaterSettings = function() {
+            const panel = document.getElementById('theater-settings-panel');
+            panel.classList.toggle('open');
+            // Close if user clicks outside
+            if (panel.classList.contains('open')) {
+                document.addEventListener('click', closeSettingsOnClickOutside);
+            } else {
+                document.removeEventListener('click', closeSettingsOnClickOutside);
+            }
+        }
+
+        function closeSettingsOnClickOutside(event) {
+            const panel = document.getElementById('theater-settings-panel');
+            const button = document.getElementById('settings-button');
+            if (!panel.contains(event.target) && !button.contains(event.target)) {
+                panel.classList.remove('open');
+                document.removeEventListener('click', closeSettingsOnClickOutside);
+            }
+        }
+        
+        window.toggleDarkMode = function() {
+            document.getElementById('appBody').classList.toggle('dark');
+            const isDark = document.getElementById('appBody').classList.contains('dark');
+            localStorage.setItem('theaterDarkMode', isDark ? 'true' : 'false');
+        }
+
+        // Apply saved dark mode preference
+        if (localStorage.getItem('theaterDarkMode') === 'true') {
+            document.getElementById('appBody').classList.add('dark');
+        }
+
+        window.togglePerformance = function() {
+            // Placeholder for performance toggle logic
+            notify("Performance mode toggle functionality coming soon!");
+        }
+        window.exportSettings = function() { notify("Export settings feature coming soon!"); }
+        window.importSettings = function(event) { notify("Import settings feature coming soon!"); }
+        
+        window.scrollContent = function(id, direction) {
+            const container = document.getElementById(id);
+            const scrollAmount = 300; 
+            if (direction === 'left') {
+                container.scrollLeft -= scrollAmount;
+            } else {
+                container.scrollLeft += scrollAmount;
+            }
+        }
+
+
+        // ============================
+        // PROXY LOGIC
+        // ============================
+
+        window.launchProxy = function() {
+            const urlInput = document.getElementById('proxyUrlInput');
+            const iframe = document.getElementById('proxyFrame');
+            const rawUrl = urlInput.value.trim();
+
+            if (!rawUrl) {
+                notify("Please enter a URL to launch.");
+                return;
+            }
+
+            // Simple check to ensure a protocol is present
+            let finalUrl = rawUrl;
+            if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
+                finalUrl = 'https://' + finalUrl;
+            }
+
+            // For this single-file demo, we will load the raw URL, which might be blocked
+            iframe.src = finalUrl;
+            iframe.style.display = 'block';
+        }
+
+        // ============================
+        // SNOWFLAKES (RE-INIT)
+        // ============================
+        // This runs the snow animation continuously across all "pages"
         const snowLayer = document.getElementById('snow-layer');
-        function createSnowflake() { /* ... snow creation logic ... */ }
+        function createSnowflake() {
+            const s = document.createElement("div");
+            s.classList.add("snowflake");
+            s.style.width = s.style.height = Math.random() * 4 + 1 + "px";
+            s.style.top = Math.random() * -10 + "vh";
+            s.style.left = Math.random() * 100 + "vw";
+            s.style.animationDuration = Math.random() * 12 + 8 + "s";
+            s.style.animationDelay = Math.random() * 6 + "s";
+            s.style.zIndex = Math.floor(Math.random() * 5);
+
+            snowLayer.appendChild(s);
+            setTimeout(() => s.remove(), 20000);
+        }
         setInterval(createSnowflake, 150);
 
         // Render initial game list
