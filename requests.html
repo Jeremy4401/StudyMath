@@ -238,13 +238,12 @@
     <div id="sidebar">
         <div onclick="window.location.href='index.html'">🏠</div>
         <div onclick="window.location.href='index.html#games'">🎮</div>
-        <div onclick="window.location.href='index.html#downloads'">⬇</div>
-        <div onclick="window.location.href='index.html#favorites'">⭐</div>
-        <div onclick="window.location.href='index.html#theater'">🎬</div>
         <div onclick="window.location.href='index.html#friends'">👥</div>
         <div onclick="window.location.href='index.html#profile'">👤</div>
         <div onclick="window.location.href='index.html#settingsPage'">⚙️</div>
-        <div class="sidebar-active">📮</div> <div onclick="panic()">⚠</div>
+        <div onclick="window.location.href='theater.html'">🎬</div>
+        <div class="sidebar-active">📮</div> <div onclick="window.location.href='proxies.html'">🌐</div>
+        <div onclick="panic()">⚠</div>
     </div>
 
     <div id="main">
@@ -299,13 +298,11 @@
     </div>
 
     <script>
-        // Placeholder for the panic function in case someone navigates directly here
         function panic() {
             location.href = "https://classroom.google.com"; 
         }
 
         // 1. DISCORD WEBHOOK URL
-        // NOTE: Your specific webhook URL from the previous message
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1442000760710758430/ZWZiA2xZPAVzbD15kHA-C2YxoLb3rFXUl-xuiBmOhpmD1cylFQ28jGl3S8ZRmiPGhLwu";
 
         // 2. Form Submission Handler
@@ -316,58 +313,38 @@
             const messageDiv = document.getElementById('form-message');
             const submitButton = form.querySelector('.submit-btn');
 
-            // Prepare form data
             const type = document.getElementById('type').value;
             const detail = document.getElementById('detail').value;
             const name = document.getElementById('name').value || "Anonymous User";
             
-            // Disable button during submission
             submitButton.disabled = true;
             submitButton.textContent = "Sending...";
             messageDiv.style.display = 'none';
 
-            // Format data into a Discord Embed/Webhook payload
             const payload = {
                 username: "calcfree Request Bot",
-                avatar_url: "https://i.imgur.com/8YlV4z8.png", // Snowflake icon
-                embeds: [
-                    {
-                        title: `New Request: ${type}`,
-                        description: `**Details:**\n${detail}`,
-                        color: 6950290, // Blue color for the embed sidebar
-                        fields: [
-                            {
-                                name: "Submitted By",
-                                value: name,
-                                inline: true
-                            },
-                            {
-                                name: "Type",
-                                value: type,
-                                inline: true
-                            }
-                        ],
-                        timestamp: new Date().toISOString(),
-                        footer: {
-                            text: "Via calcfree request form"
-                        }
-                    }
-                ]
+                avatar_url: "https://i.imgur.com/8YlV4z8.png", 
+                embeds: [{
+                    title: `New Request: ${type}`,
+                    description: `**Details:**\n${detail}`,
+                    color: 6950290, 
+                    fields: [{ name: "Submitted By", value: name, inline: true }, { name: "Type", value: type, inline: true }],
+                    timestamp: new Date().toISOString(),
+                    footer: { text: "Via calcfree request form" }
+                }]
             };
 
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload),
                 });
 
                 if (response.ok) {
                     messageDiv.textContent = "✅ Request sent successfully! Thank you.";
                     messageDiv.className = 'success';
-                    form.reset(); // Clear the form
+                    form.reset(); 
                 } else {
                     messageDiv.textContent = `❌ Submission failed! Status: ${response.status}. Check webhook or form fields.`;
                     messageDiv.className = 'error';
@@ -383,7 +360,7 @@
             }
         });
 
-        // 3. Snowflakes Script (Copied from Launcher)
+        // 3. Snowflakes Script 
         const snowLayer = document.getElementById('snow-layer');
         function createSnowflake() {
             const s = document.createElement("div");
