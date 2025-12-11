@@ -2,440 +2,335 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>SME Launcher - ❄️ Snowy Edition (Single File)</title>
+    <title>SME Launcher</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <style>
-        /* =====================================
-           [1] SNOWY GLASS THEME VARIABLES (SHARED VISUALS)
-        ===================================== */
         @font-face {
             font-family: "Comic Sans MS";
             src: local("Comic Sans MS");
         }
 
         :root {
-            /* Snowy Day Palette */
-            --color-sky-light: #e0f2f7;
-            --color-sky-dark: #c0e0e8;
-            --color-snow: #f8f8f8;
-            --color-accent-blue: #66b2b2; /* Main highlight color */
-            --color-text-dark: #33444c;
-            --color-text-light: #5a7d8a;
-            --color-glass-effect: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
-            --color-glass-border: rgba(255, 255, 255, 0.8);
-            --color-bg-primary: linear-gradient(180deg, var(--color-sky-light) 0%, var(--color-sky-dark) 100%);
-            --color-sidebar-bg: rgba(255, 255, 255, 0.7); /* Lighter sidebar */
-            --color-button-hover: #7bd3d3; /* Lighter blue */
-            --color-success: #4caf50;
-            --color-error: #e53935;
-            
-            /* Glass card specific settings */
-            --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-
-            /* Theater specific variables (Light Mode) */
-            --bg: var(--color-bg-primary); 
-            --text: var(--color-text-dark);
-            --panel: rgba(255, 255, 255, 0.7); 
-            --accent: var(--color-accent-blue);
-        }
-
-        /* Dark Mode for Theater Section */
-        .dark {
-            --bg: #1f1f1f;
+            --bg: #0f0f0f;
+            --bg2: #1a1a1a;
             --text: #fff;
-            --panel: #333;
-            --accent: #4CAF50; 
+            --accent: #4caf50;
+            --sidebar: #000;
+            --banner1: #000;
+            --banner2: #0f0f0f;
         }
 
         body {
             margin: 0;
-            background: var(--color-bg-primary);
-            color: var(--color-text-dark);
-            font-family: "Comic Sans MS", cursive, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            font-family: "Comic Sans MS";
             overflow-x: hidden;
-            background-attachment: fixed;
-            min-height: 100vh;
         }
 
-        /* =====================================
-           [2] SNOW BACKGROUND ANIMATION (SHARED VISUALS)
-        ===================================== */
-        #snow-layer {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 100;
+        body.light {
+            --bg: #f5f5f5;
+            --bg2: #ffffff;
+            --text: #111;
+            --accent: #2196f3;
+            --sidebar: #222;
         }
 
-        .snowflake {
-            position: absolute;
-            background: var(--color-snow);
-            border-radius: 50%;
-            pointer-events: none;
-            animation: fall linear infinite;
-            box-shadow: 0 0 4px rgba(255, 255, 255, 0.7);
-            opacity: 0;
-            filter: blur(0.5px);
-        }
-
-        @keyframes fall {
-            0% {
-                opacity: 0;
-                transform: translateY(-10vh) scale(0.8);
-            }
-            5% {
-                opacity: 0.9;
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(110vh) scale(1.2);
-            }
-        }
-        
-        /* =====================================
-           [3] BASE STYLES AND LAYOUT
-        ===================================== */
-
-        /* SIDEBAR (Standardized Navigation) - FIXED STYLES */
+        /* SIDEBAR */
         #sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            /* Set a proper fixed width */
-            width: 75px; 
+            width: 75px;
             height: 100%;
-            background: var(--color-sidebar-bg);
-            backdrop-filter: blur(10px);
-            border-right: 1px solid var(--color-glass-border);
+            background: var(--sidebar);
             padding-top: 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
             z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
         }
 
         #sidebar div {
-            /* Make the click area large and center the icon */
-            padding: 15px; 
+            padding: 15px;
             cursor: pointer;
             text-align: center;
             font-size: 24px;
             transition: 0.2s;
-            color: var(--color-text-dark);
-            /* Ensure the area takes full width of the padded space */
-            width: 45px; 
-            /* Center the box within the sidebar */
-            margin: 0 auto; 
         }
 
-        #sidebar div:hover, .sidebar-active {
-            transform: scale(1.1);
-            /* Apply the glass accent hover effect */
-            background: rgba(102, 178, 178, 0.2); 
-            border-radius: 8px;
-            color: var(--color-accent-blue);
+        #sidebar div:hover {
+            transform: scale(1.2);
         }
 
         /* MAIN */
         #main {
             margin-left: 90px;
             padding: 20px;
-            z-index: 5;
-            position: relative;
         }
 
         .section {
             display: none;
-            animation: fadeIn 0.5s ease-out;
-            min-height: calc(100vh - 40px); 
         }
 
         .section.active {
             display: block;
         }
-        
-        /* CARD STYLES (Apply Glass Effect) */
-        .homeCard, .card, .proxy-box, .download-box {
-            background: var(--color-glass-effect);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--color-glass-border);
+
+        #homeDashboard {
             padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
-            box-shadow: var(--card-shadow);
-            transition: transform 0.3s ease-out, box-shadow 0.3s;
-        }
-        .card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 8px 30px rgba(102, 178, 178, 0.3);
+            animation: fadeIn 0.4s ease;
         }
 
-        h2, h3 {
-            color: var(--color-accent-blue);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+        .homeCard {
+            background: var(--bg2);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px #0005;
         }
 
-        /* Buttons (Blue/Accent theme) */
-        .tabBtn, .submit-btn, .download-btn, .nav-btn, .launch-btn {
-            padding: 10px 16px;
-            border-radius: 20px;
-            border: 2px solid var(--color-accent-blue);
-            background: var(--color-accent-blue);
-            color: var(--color-snow);
+        .postBox {
+            background: #222;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        body.light .postBox {
+            background: #ddd;
+        }
+
+        .postAuthor {
             font-weight: bold;
-            transition: 0.2s;
+            color: var(--accent);
+        }
+
+        .postTime {
+            opacity: 0.6;
+            font-size: 11px;
+        }
+
+        .postActions {
+            margin-top: 5px;
+            font-size: 13px;
+            opacity: 0.8;
+            display: flex;
+            gap: 15px;
+        }
+
+        /* GAME CARDS */
+        .card {
+            background: var(--bg2);
+            width: 260px;
+            height: 380px;
+            border-radius: 12px;
+            padding: 12px;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px;
             cursor: pointer;
-        }
-        .tabBtn:hover, .submit-btn:hover, .download-btn:hover, .launch-btn:hover {
-            background: var(--color-button-hover); 
-            border-color: var(--color-button-hover);
-            transform: translateY(-1px);
-        }
-        
-        /* Form Styles (Request/Proxy sections) */
-        input[type="text"], textarea, select {
-            padding: 10px;
-            border: 1px solid var(--color-glass-border);
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.7);
-            color: var(--color-text-dark);
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        input:focus, textarea:focus, select:focus {
-            border-color: var(--color-accent-blue);
-            box-shadow: 0 0 0 3px rgba(102, 178, 178, 0.3);
-            outline: none;
+            transition: 0.2s;
+            position: relative;
+            vertical-align: top;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .card:hover {
+            transform: translateY(-6px) scale(1.05);
         }
 
-        /* =====================================
-           [4] GAME EMBED AND HOME BUTTON
-        ===================================== */
-        #embedWin, #theaterEmbedContainer {
+        .card img {
+            width: 100%;
+            height: auto;
+            max-height: 260px;
+            /* keeps them from getting too tall */
+            object-fit: contain;
+            /* shows full PNG without cropping */
+            border-radius: 10px;
+            display: block;
+        }
+
+        .star {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .star.fav {
+            color: gold;
+            text-shadow: 0 0 10px gold;
+        }
+
+        #embedWin {
+            display: none;
             position: fixed;
             inset: 0;
-            background: black;
-            display: none;
-            z-index: 9000;
+            background: #000d;
+            z-index: 9999;
         }
-        #embedFrame, #theaterEmbedFrame {
+
+        #embedFrame {
             width: 100%;
             height: 100%;
             border: none;
         }
 
-        #homeBtn {
-            background: var(--color-glass-effect);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--color-glass-border);
-            color: var(--color-accent-blue);
-            width: 50px;
-            height: 50px;
+        .profileBanner {
+            width: 100%;
+            height: 90px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            border-radius: 12px;
+        }
+
+        .profileAvatar {
+            width: 96px;
+            height: 96px;
             border-radius: 50%;
+            border: 3px solid var(--bg2);
+            margin-top: -48px;
+            margin-left: 15px;
+            background: #333;
+        }
+
+        .tabBtn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: none;
+            background: #222;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .tabBtn:hover {
+            background: var(--accent);
+        }
+
+        #settingsContent {
+            background: var(--bg2);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .sme-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #333;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #000;
+            font-size: 14px;
+            opacity: 0;
+            transition: 0.25s;
+            z-index: 10000;
+        }
+
+        .sme-toast.success {
+            background: #2e7d32;
+        }
+
+        .sme-toast.info {
+            background: #1976d2;
+        }
+
+        .sme-toast.error {
+            background: #c62828;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #homeBtn {
             position: fixed;
             bottom: 20px;
-            right: 20px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s;
-            cursor: pointer;
-            z-index: 10001; 
-        }
-        #homeBtn:hover { transform: scale(1.1); }
-
-        /* =====================================
-           [5] REQUESTS SECTION STYLES
-        ===================================== */
-        .request-container {
-            padding: 20px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: calc(100vh - 40px);
-        }
-        .form-box {
-            width: 100%;
-            max-width: 450px;
-        }
-        .submit-btn {
-            width: 100%;
-            margin-top: 10px;
-        }
-        #form-message {
-            text-align: center;
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            display: none;
-        }
-        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-
-        /* =====================================
-           [6] THEATER SECTION STYLES
-        ===================================== */
-        .dark {
-            --bg: #1f1f1f;
-            --text: #fff;
-            --panel: #333;
-            --accent: #4CAF50; 
-        }
-        .theater-header {
-            background: rgba(255, 255, 255, 0.7); 
-            backdrop-filter: blur(10px);
-            color: var(--color-text-dark);
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 15px;
-            border-bottom: 1px solid var(--color-glass-border);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-left: -20px; 
-            margin-right: -20px;
-            margin-bottom: 20px;
-        }
-        .dark .theater-header { background: #282828; color: white; border-bottom: 1px solid #444; }
-        #theater-settings-panel {
-            position: fixed;
-            top: 0;
-            left: 75px; 
-            width: 260px;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.9);
-            color: var(--color-text-dark);
-            padding: 20px;
-            transform: translateX(-100%);
-            transition: 0.35s ease;
-            z-index: 9999;
-            border-right: 1px solid var(--color-glass-border);
-        }
-        #theater-settings-panel.open { transform: translateX(0); }
-        .dark #theater-settings-panel { background: #222; color: white; border-right: 1px solid #444; }
-        .scroller-container { position: relative; margin-top: 15px; }
-        .scroller {
-            display: flex;
-            overflow-x: auto;
-            gap: 12px;
-            scroll-behavior: smooth;
-            padding: 10px 0;
-        }
-        .scroller::-webkit-scrollbar { display: none; }
-        .arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 32px;
-            background: rgba(102, 178, 178, 0.7);
-            padding: 5px 10px;
-            border-radius: 6px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
             color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 26px;
             cursor: pointer;
-            user-select: none;
-            z-index: 50;
-        }
-        .movie-btn {
-            display: inline-block;
-            padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid var(--color-glass-border);
-            color: var(--color-text-dark);
-            border-radius: 15px;
-            transition: background 0.2s, transform 0.2s;
-            margin: 5px;
-            white-space: nowrap;
+            z-index: 5000;
+            box-shadow: 0 0 10px #0008;
+            transition: 0.2s;
         }
 
-        /* =====================================
-           [7] PROXIES SECTION STYLES
-        ===================================== */
-        .proxy-container {
-            padding: 20px; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: calc(100vh - 40px);
-        }
-        .proxy-box {
-            width: 100%;
-            max-width: 600px;
-            margin-top: 50px;
-        }
-        .proxy-input {
-            width: calc(100% - 20px);
-            margin-bottom: 20px;
-        }
-        #proxyFrame {
-            width: 100%;
-            height: 80vh; 
-            border: 1px solid var(--color-glass-border);
-            border-radius: 15px;
-            display: none;
-            margin-top: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        #homeBtn:hover {
+            transform: scale(1.15);
         }
     </style>
 </head>
 
-<body id="appBody">
-    <div id="snow-layer"></div>
-
+<body onload="renderHome()">
     <div id="sidebar">
         <div onclick="nav('homeDashboard')">🏠</div>
         <div onclick="nav('games')">🎮</div>
-        <div onclick="nav('friends')">👥</div>
-        <div onclick="nav('profile')">👤</div> 
-        <div onclick="openSettings()">⚙️</div>
+        <div onclick="nav('favorites')">⭐</div>
         <div onclick="nav('theater')">🎬</div>
-        <div onclick="nav('requests')">📮</div>
-        <div onclick="nav('proxies')">🌐</div> 
+        <div onclick="nav('friends')">👥</div>
+        <div onclick="nav('profile')">👤</div>
+        <div onclick="openSettings()">⚙️</div>
+        <div onclick="toggleTheme()">🌗</div>
         <div onclick="panic()">⚠</div>
     </div>
 
-    <div id="homeBtn" onclick="exitEmbed()">🏠</div>
+    <div id="homeBtn" onclick="goHome()">🏠</div>
 
     <div id="main">
         <h1 id="pageTitle">Home</h1>
 
         <div id="homeDashboard" class="section active">
             <div class="homeCard">
-                <h2>❄️ Welcome to the Snowy Launcher!</h2>
-                <p>Enjoy the clean, glassy aesthetic and chat with friends.</p>
+                <h2>Welcome back!</h2>
+                <p>To exit a game refresh the page or click esc</p>
             </div>
+
+            <div id="continuePlaying" class="homeCard">
+                <h3>Continue Playing</h3>
+                <div id="continueList"></div>
+            </div>
+
             <div id="socialFeed" class="homeCard">
                 <h3>Social Feed</h3>
                 <div id="feedPosts"></div>
                 <textarea
                     id="feedInput"
                     placeholder="Share something..."
-                    style="width:100%;height:60px;padding:10px;margin-top:10px;"
+                    style="width:100%;height:60px;padding:10px;border:none;border-radius:8px;background:#222;color:white;margin-top:10px;"
                 ></textarea>
                 <button
                     onclick="postToFeed()"
-                    class="tabBtn"
-                    style="width:100%;margin-top:8px;"
+                    style="padding:10px;margin-top:8px;width:100%;border:none;border-radius:8px;background:var(--accent);color:white;"
                 >
                     Post
                 </button>
             </div>
+
             <div id="friendsOnline" class="homeCard">
                 <h3>Friends Online</h3>
                 <div id="onlineList"></div>
             </div>
+
             <div id="activityLog" class="homeCard">
                 <h3>Recent Activity</h3>
                 <div id="activityList"></div>
@@ -443,672 +338,667 @@
         </div>
 
         <div id="games" class="section">
-            <h2>Game Library</h2>
-            <div id="gameCategoryTabs">
-                <div class="category-tab active" data-category="All" onclick="filterGames('All', this)">All Games</div>
-                <div class="category-tab" data-category="Action" onclick="filterGames('Action', this)">Action</div>
-                <div class="category-tab" data-category="Strategy" onclick="filterGames('Strategy', this)">Strategy</div>
-                <div class="category-tab" data-category="Classic" onclick="filterGames('Classic', this)">Classic</div>
-                <div class="category-tab" data-category="Unblocked" onclick="filterGames('Unblocked', this)">Unblocked</div>
-            </div>
-            <div id="gameList" style="display:flex; flex-wrap:wrap;">
-                </div>
+            <h2>Games</h2>
+            <div id="gameList"></div>
         </div>
-        
-        <div id="friends" class="section">
-            <h2>Friends & Messages</h2>
-            <div class="homeCard">
-                <h3>Your Friend Code</h3>
-                <p>Share this code to be added by others.</p>
-                <code id="displayFriendCode" style="font-size:1.2em; color:var(--color-accent-blue);">Loading...</code>
-                <button onclick="copyFriendCode()" class="tabBtn" style="margin-left:10px;">Copy Code</button>
-                <div id="authStatus" style="margin-top:10px; font-size:12px; color:var(--color-text-light);">Not Logged In. Cannot use online features.</div>
-            </div>
-            <div class="homeCard">
-                <h3>Send Friend Request</h3>
-                <input type="text" id="friendCodeInput" placeholder="Enter Friend Code (e.g., SME-A1B2C3)" style="padding:10px; width:200px; margin-right: 10px;">
-                <button onclick="sendFriendRequest()" class="tabBtn">Send Request</button>
-            </div>
-            <div id="chatWindow" class="homeCard" style="display:none;">
-                 </div>
+        <div id="favorites" class="section">
+            <h2>Favorites</h2>
+            <div id="favoriteList"></div>
         </div>
-
-        <div id="profile" class="section">
-            <h2>👤 User Profile</h2>
-            <div class="homeCard">
-                <h3>Your Account Information</h3>
-                <p>Status: Logged In</p>
-                <p>Username: <span id="currentUsername">Loading...</span></p>
-                <p>Friend Code: <code id="displayFriendCode2">Loading...</code></p>
-            </div>
-            <div class="homeCard">
-                <h3>Achievements</h3>
-                <p>No achievements unlocked yet.</p>
-            </div>
-        </div>
-        
-        <div id="settingsPage" class="section">
-            <h2>⚙️ Settings</h2>
-            <div id="settingsContent" class="homeCard">
-                </div>
-        </div>
-        
-        <div id="requests" class="section">
-            <div class="request-container">
-                <div class="form-box homeCard">
-                    <h2>
-                        <span style="color: var(--color-accent-blue)">📮</span> Suggestion Box
-                        <span style="color: var(--color-accent-blue)">💡</span>
-                    </h2>
-                    <form id="requestForm">
-                        <div class="form-group">
-                            <label for="reqType">Request Type</label>
-                            <select id="reqType" name="Request Type" required style="width:100%;">
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="Game">Game Request (Name of game)</option>
-                                <option value="Proxy">Proxy Request (Need access to X site)</option>
-                                <option value="Feature">Feature Suggestion (New button/idea)</option>
-                                <option value="Bug">Report a Bug/Problem</option>
-                                <option value="Other">Other Suggestion</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="reqDetail">Details / Link (Be Specific!)</label>
-                            <textarea
-                                id="reqDetail"
-                                name="Details"
-                                rows="4"
-                                placeholder="E.g., The full name of the game, a link to the site you need proxied, or a detailed description of the feature."
-                                required style="width:100%;"
-                            ></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="reqName">Your Name (Optional)</label>
-                            <input
-                                type="text"
-                                id="reqName"
-                                name="User Name"
-                                placeholder="Your Name / Nickname"
-                                style="width:100%;"
-                            />
-                        </div>
-
-                        <button type="submit" class="submit-btn">
-                            Send Request <span style="font-size: 1.2em">🚀</span>
-                        </button>
-                    </form>
-                    
-                    <div id="form-message"></div>
-                </div>
-            </div>
-        </div>
-
         <div id="theater" class="section">
-            <header class="theater-header">
-                <div id="site-title">SME Theater</div>
-                <div id="search-bar" style="flex-grow:1;"><input id="theater-search-input" class="proxy-input" placeholder="Search..." style="margin-bottom:0;"></div>
-                <button id="settings-button" onclick="openTheaterSettings()" class="download-btn">⚙️ Settings</button>
-            </header>
-
-            <div id="theater-content">
-                <h1 style="color:var(--color-accent-blue);">🎬 Theater Hub</h1>
-                <p style="color:var(--color-text-light);">Select a category from the tabs below to begin watching media.</p>
-
-                <div id="internal-sidebar" style="display:flex; gap:10px; margin-top:20px; flex-wrap: wrap;">
-                    <button class="nav-btn download-btn active" data-page="hub-page" onclick="showTheaterPage('hub-page', this)">🏠 Hub</button>
-                    <button class="nav-btn download-btn" data-page="youtube-page" onclick="showTheaterPage('youtube-page', this)">▶ YouTube</button>
-                    <button class="nav-btn download-btn" data-page="movies-page" onclick="showTheaterPage('movies-page', this)">🎬 Movies</button>
-                    <button class="nav-btn download-btn" data-page="shows-page" onclick="showTheaterPage('shows-page', this)">📺 TV Shows</button>
-                </div>
-
-                <div id="theater-pages">
-                    <div id="hub-page" class="theater-page active" style="margin-top:20px;">
-                        </div>
-                    
-                    <div id="youtube-page" class="theater-page" style="display:none; margin-top:20px;">
-                        <h3>YouTube Playlists</h3>
-                        <div class="scroller-container">
-                            <div class="arrow left-arrow" onclick="scrollContent('yt-scroll', 'left')">&#10094;</div>
-                            <div class="arrow right-arrow" onclick="scrollContent('yt-scroll', 'right')">&#10095;</div>
-                            <div id="yt-scroll" class="scroller">
-                                <div class="download-box" onclick="openTheaterEmbedURL('https://www.youtube.com/embed/videoseries?list=PL76_gEdrKLsp21bfx-9TFsNv8Kl8B9YuC')">
-                                    <h2 style="color:var(--color-accent-blue);">Bartolozzi Playlist</h2>
-                                    <p style="font-size:0.9em; margin: 5px 0 10px;">Funny Shorts Compilation</p>
-                                    <button class="download-btn">Play</button>
-                                </div>
-                                <div class="download-box" onclick="openTheaterEmbedURL('https://www.youtube.com/embed/videoseries?list=PLx0sYbCqW5bC0Yh2Y8H94s9p-n4M3J6gA')">
-                                    <h2 style="color:var(--color-accent-blue);">Coding Tutorials</h2>
-                                    <p style="font-size:0.9em; margin: 5px 0 10px;">Learn to code in 10 minutes!</p>
-                                    <button class="download-btn">Play</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="movies-page" class="theater-page" style="display:none; margin-top:20px;">
-                        <h3>Movies (Google Drive Links)</h3>
-                        <div id="movies-scroll" class="scroller" style="flex-wrap: wrap; height: auto;">
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1AIq4OqiMWiY9zZSayF5VID7pfTwSH6BM/preview')">A Bug's Life</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1e2UIrJdsz_0k5tp2v0EnPZiPv2ZQSTzg/preview')">A Charlie Brown Christmas</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/0B-uFeCO4yCFISTFmNlE3akNDbU0/preview')">A Dog's Purpose</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1ify_EMaQW-ZAn2F0STztn2AGU-jE7aHL/preview')">A Goofy Movie</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1uCRRJZj1GAaweX996uHbF2zxPoessmGW/preview')">Alvin and the Chipmunks</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1LTKy48IbusfXsl5nSNDTd0M3A8B3aPke/preview')">Alvin and the Chipmunks: Chipwrecked</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1GYQqHUdyWMNQJKj4Sa8SGW0ZRX32D5og/preview')">Annie</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1e4NzmeC84qest_9Wzmtvmi80brGPYnsN/preview')">An Extremely Goofy Movie</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1AW3Zm8256tzZ-37lmgYmIGse4knu8IdA/preview')">Ant-Man and the Wasp</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1_qJqk2Ss1f45puz3xGQcdD1NxM3ipupj/preview')">Ant-Man</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/16tKuEYtxi7EeKtX3yZZR-nXgZ_oGTxXS/preview')">Avatar</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1ehi9tidOYHb1RMldxtBw6-L3UhyEKVm9/preview')">Avengers: Endgame</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1VWLpj4G4CEgHnjpxfc67MrlEWu5pD75Y/preview')">Avengers: Infinity War</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1ZwP0FLdFdAoeskqGvQYX5CwqEeSFWS1G/preview')">Back to the Future</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1vmA2LTkSzbtUJve8TTy2UVkPAfHMtGwK/preview')">Back to the Future II</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/16A4hzHFTcNduq6F-u4zQw7iTha5aEKD-/preview')">Back to the Future III</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1_uoLtwAXgjzKVC3sFLkgEKROhzr6GSrD/preview')">The Bad Guys</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1K88LvZ6q9KRwsdiVQ72Wrh5DQqWVLkd3/preview')">Barbie</button>
-                            <button class="movie-btn" onclick="openTheaterEmbedURL('https://drive.google.com/file/d/1CZvw1MgSLVQR9Z9L8qpl8j1oI7DnMDWr/preview')">The Dark Knight</button>
-                        </div>
-                    </div>
-
-                    <div id="shows-page" class="theater-page" style="display:none; margin-top:20px;">
-                        <h3>📺 TV Shows & Series</h3>
-                        <p class="download-box">This section is currently being updated! We are adding new series links soon.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="theater-settings-panel">
-                <h2>Theater Settings</h2>
-                <button onclick="toggleDarkMode()">Toggle Dark/Light Mode</button>
-                <button onclick="togglePerformance()">Performance Mode</button>
-                <hr style="border-color: rgba(0, 0, 0, 0.1);">
-                <button onclick="exportSettings()">Export Settings</button>
-                <input type="file" onchange="importSettings(event)" style="display:block; margin-top: 10px; width: 100%;">
+            <h2>Theater</h2>
+            <p>Movies and media content would be loaded here.</p>
+        </div>
+        <div id="friends" class="section">
+            <h2>Friends</h2>
+            <p>Manage your friends and requests here.</p>
+        </div>
+        <div id="profile" class="section">
+            <h2>Profile</h2>
+            <div class="homeCard">
+                <div class="profileBanner"></div>
+                <img id="profileAvatarImg" class="profileAvatar" src="" alt="Avatar"/>
+                <h3 id="profileUsername"></h3>
+                <p id="profileBio"></p>
+                <p>Status: <b id="profileStatus"></b></p>
+                <p>Friend Code: <code id="profileCode"></code></p>
+                <button onclick="openSettings()">Edit Profile</button>
             </div>
         </div>
-
-        <div id="proxies" class="section">
-            <div class="proxy-container">
-                <div class="proxy-box">
-                    <h2>🌐 Launch Web Proxy</h2>
-                    <input
-                        type="text"
-                        id="proxyUrlInput"
-                        class="proxy-input"
-                        placeholder="Enter URL (e.g., https://www.youtube.com)"
-                    />
-                    
-                    <button onclick="launchProxy()" class="launch-btn">
-                        Launch Site <span style="font-size: 1.2em">🚀</span>
-                    </button>
-                </div>
-
-                <iframe id="proxyFrame" frameborder="0"></iframe>
-            </div>
+        <div id="settingsPage" class="section">
+            <h2>Settings</h2>
+            <div id="settingsContent"></div>
         </div>
-        
     </div>
 
     <div id="embedWin">
         <iframe id="embedFrame"></iframe>
     </div>
-    
-    <div id="theaterEmbedContainer">
-        <iframe id="theaterEmbedFrame"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-    </div>
 
-    <div id="gameModal" style="display:none; position:fixed; inset:0; background:rgba(0, 0, 0, 0.5); z-index:9999; align-items:center; justify-content:center;">
-        <div id="modalBox" class="homeCard" style="width:420px; padding:20px; box-shadow:0 0 30px rgba(102, 178, 178, 0.4);">
-            <img id="modalImg" src="" style="width:100%;border-radius:10px;" />
+    <div
+        id="gameModal"
+        style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #000a;
+            z-index: 9999;
+            display: flex; /* Changed from inline style to be manageable in JS */
+            align-items: center;
+            justify-content: center;
+        "
+    >
+        <div
+            id="modalBox"
+            style="
+                width: 420px;
+                background: var(--bg2);
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 0 20px #000;
+                color: white;
+            "
+        >
+            <img id="modalImg" src="" style="width: 100%; border-radius: 10px" />
             <h2 id="modalTitle"></h2>
             <p id="modalDesc"></p>
-            <div id="playtimeBox" style="margin-top:10px;"></div>
-            <button id="playBtn" class="tabBtn" style="width:100%;margin-top:10px;">Play</button>
-            <button onclick="closeGameModal()" class="tabBtn" style="background:#aaa; border-color:#aaa; width:100%; margin-top:10px;">Close</button>
+            <div id="playtimeBox" style="margin-top: 10px"></div>
+
+            <button
+                id="playBtn"
+                style="
+                    padding: 10px;
+                    width: 100%;
+                    border: none;
+                    border-radius: 8px;
+                    background: var(--accent);
+                    color: white;
+                    margin-top: 10px;
+                "
+            >
+                Play
+            </button>
+
+            <button
+                onclick="closeGameModal()"
+                style="
+                    padding: 10px;
+                    width: 100%;
+                    border: none;
+                    border-radius: 8px;
+                    background: #333;
+                    color: white;
+                    margin-top: 10px;
+                "
+            >
+                Close
+            </button>
         </div>
     </div>
     
-    <div id="friendProfileModal" style="display:none; position:fixed; inset:0; background:rgba(0, 0, 0, 0.7); z-index:9999; align-items:center; justify-content:center;">
-        <div class="homeCard" style="width:350px; padding:20px;">
-            <button onclick="closeFriendProfileModal()" style="float:right; background:none; border:none; color:var(--color-text-dark); font-size:1.5em; cursor:pointer;">&times;</button>
-            <div class="profileBanner" style="height:60px; background: var(--color-accent-blue);"></div>
-            <div id="modalFriendAvatar" class="profileAvatar" style="margin-top:-30px; background-size:cover;"></div>
-            <h2 id="modalFriendUsername" style="margin-top:10px;"></h2>
-            <p id="modalFriendStatus" style="color:var(--color-success);">Online</p>
-            <p id="modalFriendBio" style="margin-top:10px; opacity:0.8;"></p>
-            <button id="modalMessageBtn" onclick="openChatFromProfile()" class="tabBtn" style="margin-top:15px; width:100%;">Message</button>
-        </div>
-    </div>
+    <script>
+        /* ============================
+            GLOBAL NAV + BASICS
+        ============================ */
 
-    <script type="module">
-        // ============================
-        // FIREBASE INIT (V12 MODULES)
-        // ============================
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, serverTimestamp, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-        // >>> YOUR FIREBASE CONFIGURATION (UNCHANGED) <<<<
-        const firebaseConfig = {
-            apiKey: "AIzaSyBxXsXA1aoOLzDD-yNaZnHETgxPAJ-mbjw",
-            authDomain: "sme-loader.firebaseapp.com",
-            databaseURL: "https://sme-loader-default-rtdb.firebaseio.com",
-            projectId: "sme-loader",
-            storageBucket: "sme-loader.firebasestorage.app",
-            messagingSenderId: "427113600756",
-            appId: "1:427113600756:web:73227a309d4a2e6c51b0a1"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        let currentUserId = null;
-        let friendCode = localStorage.getItem("friendCode");
-
-        function notify(message) { alert(message); }
-
-        // ============================
-        // FIREBASE AUTH & USER SETUP
-        // ============================
-        onAuthStateChanged(auth, async (user) => { 
-            if (user) {
-                currentUserId = user.uid;
-                if (!friendCode) {
-                    friendCode = `SME-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
-                    localStorage.setItem("friendCode", friendCode);
-                }
-                
-                const username = localStorage.getItem("username") || `User${Math.floor(Math.random() * 10000)}`;
-
-                await setDoc(doc(db, "users", currentUserId), {
-                    username: username,
-                    friendCode: friendCode,
-                    lastSeen: serverTimestamp(),
-                    isOnline: true,
-                }, { merge: true });
-
-                document.getElementById("currentUsername").textContent = username;
-                document.getElementById("displayFriendCode").textContent = friendCode;
-                // Update the code in the profile section as well
-                const displayCode2 = document.getElementById("displayFriendCode2");
-                if (displayCode2) displayCode2.textContent = friendCode;
-
-                document.getElementById("authStatus").textContent = `Logged in as: ${username}`;
-
-            } else {
-                currentUserId = null;
-                signInAnonymously(auth).catch(error => { console.error("Anonymous sign-in failed:", error); });
-            }
-        });
-        
-        window.addEventListener('beforeunload', () => {
-             if (currentUserId) {
-                updateDoc(doc(db, "users", currentUserId), { isOnline: false });
-            }
-        });
-
-        // ============================
-        // CORE NAVIGATION AND UTILITIES
-        // ============================
-
-        window.nav = function(id) {
-            // Hide all sections
-            document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
-            
-            // Activate the target section
+        function nav(id) {
+            document.querySelectorAll(".section").forEach((s) =>
+                s.classList.remove("active")
+            );
             const target = document.getElementById(id);
             if (target) target.classList.add("active");
 
-            // Update the page title
             const titleMap = {
-                homeDashboard: "Home", games: "Game Library", friends: "Friends & Messages",
-                profile: "User Profile", settingsPage: "Settings", theater: "SME Theater",
-                requests: "Suggestion Box", proxies: "Web Proxy"
+                homeDashboard: "Home",
+                games: "Games",
+                favorites: "Favorites",
+                theater: "Theater",
+                friends: "Friends",
+                profile: "Profile",
+                settingsPage: "Settings",
             };
-            document.getElementById("pageTitle").textContent = titleMap[id] || "SME";
 
-            // Update sidebar active class
-            document.querySelectorAll('#sidebar div').forEach(div => div.classList.remove('sidebar-active'));
-            // Find the correct element to activate (simplified for this structure)
-            const iconMap = {
-                homeDashboard: '🏠', games: '🎮', friends: '👥', profile: '👤', settingsPage: '⚙️',
-                theater: '🎬', requests: '📮', proxies: '🌐', panic: '⚠'
-            };
-            const targetIcon = iconMap[id];
-            if (targetIcon) {
-                document.querySelectorAll('#sidebar div').forEach(div => {
-                    if (div.textContent.includes(targetIcon)) {
-                        div.classList.add('sidebar-active');
-                    }
-                });
-            }
-            
-            // Special handling for sections
-            if (id === 'games') renderGameList('All');
-            if (id === 'proxies') document.getElementById('proxyFrame').style.display = 'none';
+            document.getElementById("pageTitle").textContent =
+                titleMap[id] || "SME";
+
+            if (id === 'games') renderGames();
+            if (id === 'favorites') renderFavorites();
+            if (id === 'profile') renderProfile();
+            if (id === 'settingsPage') openSettings();
+            // if (id === "theater") loadTheater(); // loadTheater function is missing in the fragment
         }
         
-        // Initial navigation
-        nav('homeDashboard');
-        
-        window.openSettings = function() {
-             document.getElementById('settingsContent').innerHTML = `
-                <h3>User Settings</h3>
-                <label for="setUsername">Change Username:</label>
-                <input type="text" id="setUsername" placeholder="Enter new username" value="${localStorage.getItem("username") || ''}" style="width:100%; margin-bottom:15px;"><br>
-                <button onclick="saveUsername()" class="tabBtn">Save Username</button>
-                <hr style="margin: 20px 0; border-color: rgba(255, 255, 255, 0.5);"><br>
-                <h3>Launcher Options</h3>
-                <p>More options coming soon!</p>
-            `;
-            nav('settingsPage');
-        }
-        
-        window.saveUsername = function() {
-            const newUsername = document.getElementById('setUsername').value.trim();
-            if (newUsername) {
-                localStorage.setItem("username", newUsername);
-                if (currentUserId) {
-                    updateDoc(doc(db, "users", currentUserId), { username: newUsername });
-                }
-                document.getElementById("currentUsername").textContent = newUsername;
-                notify(`Username updated to: ${newUsername}`);
-            } else {
-                notify("Username cannot be empty.");
-            }
+        function goHome() {
+            nav('homeDashboard');
         }
 
-        window.exitEmbed = function() {
-            // Closes the game embed
-            document.getElementById("embedWin").style.display = 'none';
-            document.getElementById("embedFrame").src = '';
-            
-            // Closes the theater embed
-            document.getElementById("theaterEmbedContainer").style.display = 'none';
-            document.getElementById("theaterEmbedFrame").src = '';
-            
-            // Hide the exit button
-            document.getElementById("homeBtn").style.display = 'none';
+        function toggleTheme() {
+            document.body.classList.toggle("light");
         }
 
-        window.panic = function() {
+        function panic() {
             location.href = "https://classroom.google.com";
         }
 
-        window.loadEmbed = function(url) {
-            document.getElementById("embedFrame").src = url;
-            document.getElementById("embedWin").style.display = 'block';
-            document.getElementById("homeBtn").style.display = 'flex';
-            closeGameModal();
+        function enc(u) {
+            return u;
         }
 
-        window.closeGameModal = function() {
-            document.getElementById('gameModal').style.display = 'none';
+        function notify(msg, type = "info") {
+            const t = document.createElement("div");
+            t.className = "sme-toast " + type;
+            t.textContent = msg;
+            document.body.appendChild(t);
+            requestAnimationFrame(() => {
+                t.style.opacity = 1;
+            });
+            setTimeout(() => {
+                t.style.opacity = 0;
+                setTimeout(() => t.remove(), 250);
+            }, 2500);
         }
 
-        // Placeholder functions for friend/feed features
-        window.copyFriendCode = function() { 
-            navigator.clipboard.writeText(friendCode).then(() => { notify("Friend code copied!"); });
-        }
-        window.sendFriendRequest = function() { notify("Friend Request feature is active!"); }
-        window.postToFeed = function() { notify("Social feed is active!"); }
-        window.openChatFromProfile = function() { notify("Chat is active!"); }
+        /* ============================
+            BASIC DATA LOAD
+        ============================ */
 
+        let recent = JSON.parse(localStorage.getItem("recent") || "[]");
+        let activity = JSON.parse(localStorage.getItem("activity") || "[]");
+        window.FRIENDS = []; // accepted friends (placeholder)
+        window.REQUESTS = []; // incoming friend requests (placeholder)
+        window.MESSAGES = {}; // DM chat histories (placeholder)
 
-        // ============================
-        // GAME LOGIC (FIXED CATEGORIES)
-        // ============================
-        
-        const gameData = [
-            { id: 1, title: "Action Shooter", category: "Action", url: "url1", image: "https://via.placeholder.com/260x160?text=Action+Game", description: "Fast-paced shooting action." },
-            { id: 2, title: "Chess Master", category: "Strategy", url: "url2", image: "https://via.placeholder.com/260x160?text=Chess+Game", description: "A timeless game of strategy." },
-            { id: 3, title: "Retro Arcade", category: "Classic", url: "url3", image: "https://via.placeholder.com/260x160?text=Retro+Arcade", description: "Old school fun." },
-            { id: 4, title: "Cool Math Game", category: "Unblocked", url: "url4", image: "https://via.placeholder.com/260x160?text=Unblocked+Fun", description: "A popular unblocked game." },
-            { id: 5, title: "Tower Defense", category: "Strategy", url: "url5", image: "https://via.placeholder.com/260x160?text=Tower+Defense", description: "Defend your base!" },
-            { id: 6, title: "Fighting Arena", category: "Action", url: "url6", image: "https://via.placeholder.com/260x160?text=Fighting+Game", description: "One vs one combat." },
-            { id: 7, title: "Snake", category: "Classic", url: "url7", image: "https://via.placeholder.com/260x160?text=Classic+Snake", description: "The original time-waster." },
-        ];
-        
-        function renderGameCard(game) {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.width = '260px'; // Added fixed width for layout
-            card.style.margin = '10px'; // Added margin for spacing
-            card.innerHTML = `
-                <img src="${game.image}" alt="${game.title}" width="100%" height="160px" style="object-fit:cover; border-radius:10px;">
-                <h3 style="margin-top:10px; margin-bottom:5px;">${game.title}</h3>
-                <p style="font-size:0.9em; color:var(--color-text-light);">${game.description.substring(0, 50)}...</p>
-                <p style="font-size:0.8em; font-style:italic;">Category: ${game.category}</p>
-                <button class="tabBtn" style="width:100%; margin-top:10px;" onclick="openGameModal(${game.id})">Details</button>
-            `;
-            return card;
-        }
-
-        window.filterGames = function(category, element) {
-            document.querySelectorAll('.category-tab').forEach(tab => tab.classList.remove('active'));
-            if (element) {
-                element.classList.add('active');
-            }
-            renderGameList(category);
-        }
-
-        function renderGameList(category) {
-            const listContainer = document.getElementById('gameList');
-            if (!listContainer) return;
-            listContainer.innerHTML = '';
+        let storedProfile = localStorage.getItem("profile");
+        let profile = storedProfile
+            ? JSON.parse(storedProfile)
+            : {
+                username: "SME User",
+                bio: "Just playing some games.",
+                status: "Online",
+                avatar: "https://i.imgur.com/1X5Rz.png",
+            };
             
-            const filteredGames = category === 'All' 
-                ? gameData 
-                : gameData.filter(game => game.category === category);
+        let friends = JSON.parse(localStorage.getItem("friends") || "[]");
 
-            if (filteredGames.length === 0) {
-                listContainer.innerHTML = `<p class="homeCard" style="width:90%;">No games found in the ${category} category.</p>`;
+        let friendCode = localStorage.getItem("friendCode");
+        if (!friendCode) {
+            friendCode =
+                "SME-" +
+                Math.random().toString(36).substring(2, 8).toUpperCase();
+            localStorage.setItem("friendCode", friendCode);
+        }
+
+        function addRecent(name) {
+            const idx = recent.indexOf(name);
+            if (idx !== -1) recent.splice(idx, 1);
+            recent.unshift(name);
+            if (recent.length > 20) recent.pop();
+            localStorage.setItem("recent", JSON.stringify(recent));
+        }
+        
+        function addActivity(type, detail) {
+            const entry = {
+                type,
+                detail,
+                time: new Date().toLocaleTimeString(),
+            };
+            activity.unshift(entry);
+            if (activity.length > 50) activity.pop();
+            localStorage.setItem("activity", JSON.stringify(activity));
+        }
+
+        /* ============================
+                HOME RENDER
+        ============================ */
+
+        function renderContinuePlaying() {
+            const box = document.getElementById("continueList");
+            if (!box) return;
+
+            if (recent.length === 0) {
+                box.innerHTML = "<p>No recent games.</p>";
                 return;
             }
 
-            filteredGames.forEach(game => {
-                listContainer.appendChild(renderGameCard(game));
+            box.innerHTML = "";
+            recent.slice(0, 3).forEach((name) => {
+                const g = games.find((x) => x.name === name);
+                if (!g) return;
+                box.innerHTML += `
+                    <div class="card" style="width:150px; height: 200px;" onclick="showGameModal('${g.name}')">
+                        <img src="${g.img}" alt="${g.name}">
+                        <div style="font-size:14px;text-align:center;">${g.name}</div>
+                    </div>
+                `;
             });
         }
+
+        let feed = JSON.parse(localStorage.getItem("feed") || "[]");
+
+        function postToFeed() {
+            const input = document.getElementById("feedInput");
+            if (!input) return;
+            const text = input.value.trim();
+            if (!text) return;
+
+            const entry = {
+                id: Date.now(),
+                user: profile.username || "You",
+                text,
+                time: new Date().toLocaleTimeString(),
+                likes: 0,
+                comments: [],
+            };
+
+            feed.unshift(entry);
+            localStorage.setItem("feed", JSON.stringify(feed));
+            input.value = "";
+            renderFeed();
+            notify("Posted to feed!", "success");
+        }
+
+        function likePost(id) {
+            const p = feed.find((x) => x.id === id);
+            if (!p) return;
+            p.likes++;
+            localStorage.setItem("feed", JSON.stringify(feed));
+            renderFeed();
+        }
+
+        function commentPost(id) {
+            const msg = prompt("Write a comment:");
+            if (!msg) return;
+
+            const p = feed.find((x) => x.id === id);
+            if (!p) return;
+
+            p.comments.push({
+                user: profile.username || "You",
+                text: msg,
+                time: new Date().toLocaleTimeString(),
+            });
+
+            localStorage.setItem("feed", JSON.stringify(feed));
+            renderFeed();
+        }
+
+        function renderFeed() {
+            const box = document.getElementById("feedPosts");
+            if (!box) return;
+
+            box.innerHTML = "";
+            if (feed.length === 0) {
+                box.innerHTML = "<p>No posts yet. Be the first!</p>";
+                return;
+            }
+
+            feed.forEach((p) => {
+                let commentHTML = "";
+                p.comments.forEach((c) => {
+                    commentHTML += `
+                        <div style="margin-left:10px;opacity:.8;">
+                            <b style="color:var(--accent)">${c.user}:</b> ${c.text}
+                            <span style="font-size:10px;opacity:.5;">${c.time}</span>
+                        </div>
+                    `;
+                });
+
+                box.innerHTML += `
+                    <div class="postBox">
+                        <div class="postAuthor">${p.user}</div>
+                        <div class="postTime">${p.time}</div>
+                        <p>${p.text}</p>
+                        <div class="postActions">
+                            <span onclick="likePost(${p.id})">❤️ ${p.likes}</span>
+                            <span onclick="commentPost(${p.id})">💬 Comment (${p.comments.length})</span>
+                        </div>
+                        ${commentHTML}
+                    </div>
+                `;
+            });
+        }
+
+        function renderFriendsOnline() {
+            const box = document.getElementById("onlineList");
+            if (!box) return;
+
+            box.innerHTML = "";
+            if (friends.length === 0) {
+                box.innerHTML = "<p>No friends added. Use the Friends section to add someone.</p>";
+                return;
+            }
+
+            friends.forEach((code) => {
+                box.innerHTML += `
+                    <div style="padding:8px;background:#222;border-radius:8px;margin:5px 0;">
+                        <b>${code}</b> — <span style="color:#4caf50;">Online</span>
+                    </div>
+                `;
+            });
+        }
+
+        function renderActivityHome() {
+            const box = document.getElementById("activityList");
+            if (!box) return;
+
+            box.innerHTML = "";
+            if (activity.length === 0) {
+                box.innerHTML = "<p>No recent activity.</p>";
+                return;
+            }
+
+            activity.slice(0, 5).forEach((a) => {
+                box.innerHTML += `
+                    <div style="padding:10px;background:#222;margin:8px 0;border-radius:10px;">
+                        <b>${a.type}:</b> ${a.detail}<br>
+                        <span style="font-size:10px;opacity:.6;">${a.time}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function renderHome() {
+            renderContinuePlaying();
+            renderFeed();
+            renderFriendsOnline();
+            renderActivityHome();
+        }
+
+        /* ============================
+                        GAMES
+        ============================ */
+
+        let games = [
+            { name: "Water (Password is funni)", img: "thumbnails/water.png", url: "https://cgxlyxnlynjpbmdiywnrc3RhcnRtewvkdwnhdglvbml0d2Fzc29zawdtv2.familyguy.in/signin.html", cat: "Action", desc: "A great unblocked version of an old favorite." },
+            { name: "3D Tuning", img: "thumbnails/3dtuning.png", url: "https://www.3dtuning.com/en-US/", cat: "Action", desc: "Customize cars in 3D." },
+            { name: "Slime Rancher", img: "thumbnails/slimerancher.png", url: "https://jeremy4401.github.io/SME/games/slimerancher.html", cat: "Action", desc: "Explore a world and farm slimes!" },
+            { name: "Jacksmith", img: "thumbnails/jacksmith.png", url: "https://jeremy4401.github.io/jacksmith/", cat: "Action", desc: "Forge weapons for your heroes." },
+            { name: "Mario Kart", img: "thumbnails/mariokart.png", url: "https://turbowarp.org/581185386/embed", cat: "Action", desc: "Race with Mario and friends." },
+            { name: "Lego Star Wars Trilogy", img: "thumbnails/starwars.png", url: "https://realtherealer.github.io/GBA/launcher.html#lsw", cat: "Action", desc: "Experience the original trilogy in Lego form." },
+            { name: "Minecraft", img: "thumbnails/minecraft.png", url: "https://jeremy4401.github.io/SME/games/minecraft.html", cat: "Survival", desc: "Explore, mine, build, and survive." },
+            { name: "Buckshot Roulette", img: "thumbnails/buckshotroulette.png", url: "https://jeremy4401.github.io/SME/games/buckshotroulette.html", cat: "Horror", desc: "A deadly game of chance." },
+            { name: "Schoolboy Runaway", img: "thumbnails/schoolboyrunaway.png", url: "https://jeremy4401.github.io/SME/games/schoolboyrunaway.html", cat: "Survival", desc: "Escape the school!" },
+            { name: "Hollow Knight", img: "thumbnails/hollowknight.png", url: "https://jeremy4401.github.io/SME/games/hollowknight.html", cat: "Action", desc: "A beautiful 2D action-adventure." },
+            { name: "10 Minutes Till Dawn", img: "thumbnails/10minutestilldawn.png", url: "https://jeremy4401.github.io/SME/games/10minutestilldawn.html", cat: "Action", desc: "Survive waves of enemies until dawn." },
+            { name: "1v1.LOL", img: "thumbnails/1v1lol.png", url: "https://jeremy4401.github.io/SME/games/1v1lol.html", cat: "Action", desc: "Build and fight against others." },
+            { name: "Amanda the Adventurer", img: "thumbnails/amandatheadventurer.png", url: "https://jeremy4401.github.io/SME/games/amandatheadventurer.html", cat: "Horror", desc: "A horror game disguised as a children's show." },
+            { name: "Baseball Bros", img: "thumbnails/baseballbros.png", url: "https://Jeremy4401.github.io/SME/games/baseballbros.html", cat: "Sports", desc: "Hit home runs!" },
+            { name: "Basket Bros", img: "thumbnails/basketbros.png", url: "https://Jeremy4401.github.io/SME/games/basketbros.html", cat: "Sports", desc: "Arcade basketball fun." },
+            { name: "Football Bros", img: "thumbnails/footballbros.png", url: "https://Jeremy4401.github.io/SME/games/footballbros.html", cat: "Sports", desc: "Fast-paced football action." },
+            { name: "Escape Road", img: "thumbnails/escaperoad.png", url: "https://Jeremy4401.github.io/SME/games/escaperoad.html", cat: "Racing", desc: "Drive to escape the chase." },
+            { name: "Fallout", img: "thumbnails/fallout.png", url: "https://Jeremy4401.github.io/SME/games/fallout.html", cat: "RPG", desc: "Explore the post-apocalyptic wasteland." },
+            { name: "Flappy Bird", img: "thumbnails/flappybird.png", url: "https://Jeremy4401.github.io/SME/games/flappybird.html", cat: "Arcade", desc: "The classic infuriating tapping game." },
+            { name: "FNAF 1", img: "thumbnails/fnaf1.png", url: "https://Jeremy4401.github.io/SME/games/fnaf1.html", cat: "Horror", desc: "Survive five nights at Freddy Fazbear's Pizza." },
+            { name: "FNAF 2", img: "thumbnails/fnaf2.png", url: "https://Jeremy4401.github.io/SME/games/fnaf2.html", cat: "Horror", desc: "The sequel with new animatronics." },
+            { name: "FNAF 3", img: "thumbnails/fnaf3.png", url: "https://Jeremy4401.github.io/SME/games/fnaf3.html", cat: "Horror", desc: "30 years later, the horror returns." },
+            { name: "FNAF 4", img: "thumbnails/fnaf4.png", url: "https://Jeremy4401.github.io/SME/games/fnaf4.html", cat: "Horror", desc: "The final chapter, played from a child's bedroom." },
+            { name: "FNAF 4 Halloween Edition", img: "thumbnails/fnaf4halloween.png", url: "https://Jeremy4401.github.io/SME/games/fnaf4halloween.html", cat: "Horror", desc: "A spooky update to FNAF 4." },
+            { name: "Sister Location", img: "thumbnails/sisterlocation.png", url: "https://Jeremy4401.github.io/SME/games/sisterlocation.html", cat: "Horror", desc: "Welcome to Circus Baby's Pizza World." },
+            { name: "Freddy Fazbear's Pizzeria Simulator", img: "thumbnails/pizzeriasimulator.png", url: "https://Jeremy4401.github.io/SME/games/pizzeriasimulator.html", cat: "Horror", desc: "Build your own pizzeria... and survive." },
+            { name: "Ultimate Custom Night", img: "thumbnails/ultimatecustomnight.png", url: "https://Jeremy4401.github.io/SME/games/ultimatecustomnight.html", cat: "Horror", desc: "The ultimate FNAF mashup challenge." },
+            { name: "Endoparasitic", img: "thumbnails/endoparasitic.png", url: "https://Jeremy4401.github.io/SME/games/endoparasitic.html", cat: "Horror", desc: "Sci-fi horror with a nasty infection." },
+            { name: "Drive Mad", img: "thumbnails/drivemad.png", url: "https://Jeremy4401.github.io/SME/games/drivemad.html", cat: "Racing", desc: "A challenging physics-based driving game." },
+            { name: "Drift Hunters", img: "thumbnails/drifthunters.png", url: "https://Jeremy4401.github.io/SME/games/drifthunters.html", cat: "Racing", desc: "High-speed drifting simulator." },
+            { name: "The Binding of Isaac", img: "thumbnails/bindingofisaac.png", url: "https://Jeremy4401.github.io/SME/games/bindingofisaac.html", cat: "Roguelike", desc: "A dark, action-packed dungeon crawler." },
+            { name: "DOOM", img: "thumbnails/doom.png", url: "https://Jeremy4401.github.io/SME/games/doom.html", cat: "Shooter", desc: "The classic demon-slaying shooter." },
+            { name: "DOOM 2", img: "thumbnails/doom2.png", url: "https://Jeremy4401.github.io/SME/games/doom2.html", cat: "Shooter", desc: "Hell on Earth." },
+            { name: "Fruit Ninja", img: "thumbnails/fruitninja.png", url: "https://Jeremy4401.github.io/SME/games/fruitninja.html", cat: "Arcade", desc: "Slice and dice fruit." },
+            { name: "Geometry Dash", img: "thumbnails/geometrydash.png", url: "https://Jeremy4401.github.io/SME/games/geometrydash.html", cat: "Rhythm", desc: "Rhythm-based platforming." },
+            { name: "Getting Over It", img: "thumbnails/gettingoverit.png", url: "https://Jeremy4401.github.io/SME/games/gettingoverit.html", cat: "Challenging", desc: "The notorious game of falling down." },
+            { name: "Granny", img: "thumbnails/granny1.png", url: "https://Jeremy4401.github.io/SME/games/granny1.html", cat: "Horror", desc: "Escape the terrifying house." },
+            { name: "Granny Chapter 2", img: "thumbnails/granny2.png", url: "https://Jeremy4401.github.io/SME/games/granny2.html", cat: "Horror", desc: "Granny and Grandpa join the chase." },
+            { name: "Granny Chapter 3", img: "thumbnails/granny3.png", url: "https://Jeremy4401.github.io/SME/games/granny3.html", cat: "Horror", desc: "A new location and more terror." },
+            { name: "Controlled Flight", img: "thumbnails/controlledflight.png", url: "https://howthingsfly.si.edu/sites/default/files/unity/ControlledFlight_new/index.html", cat: "Simulation", desc: "Learn to fly a plane." },
+            { name: "Jetpack Joyride", img: "thumbnails/jetpackjoyride.png", url: "https://Jeremy4401.github.io/SME/games/jetpackjoyride.html", cat: "Arcade", desc: "Blast off with a machine gun jetpack!" },
+            { name: "Johnny Trigger", img: "thumbnails/johnnytrigger.png", url: "https://Jeremy4401.github.io/SME/games/johnnytrigger.html", cat: "Shooter", desc: "Slow-motion bullet-dodging fun." },
+            { name: "Kindergarten", img: "thumbnails/kindergarten.png", url: "https://Jeremy4401.github.io/SME/games/kindergarten.html", cat: "Adventure", desc: "Survive a weird day at Kindergarten." },
+            { name: "Kindergarten 2", img: "thumbnails/kindergarten2.png", url: "https://Jeremy4401.github.io/SME/games/kindergarten2.html", cat: "Adventure", desc: "The sequel to the bizarre school adventure." },
+            { name: "Kindergarten 3", img: "thumbnails/kindergarten3.png", url: "https://Jeremy4401.github.io/SME/games/kindergarten3.html", cat: "Adventure", desc: "More madness in the classroom." },
+            { name: "Learn to Fly", img: "thumbnails/learntofly.png", url: "https://Jeremy4401.github.io/SME/games/learntofly.html", cat: "Arcade", desc: "Help a penguin learn to fly." },
+            { name: "Melon Playground", img: "thumbnails/melonplayground.png", url: "https://Jeremy4401.github.io/SME/games/melonplayground.html", cat: "Sandbox", desc: "A fun physics sandbox." },
+            { name: "Doodle Jump", img: "thumbnails/doodlejump.png", url: "https://Jeremy4401.github.io/SME/games/doodlejump.html", cat: "Arcade", desc: "Jump your way up endless platforms." },
+            { name: "Nazi Zombies Portable", img: "thumbnails/nazizombies.png", url: "https://Jeremy4401.github.io/SME/games/nazizombies.html", cat: "Shooter", desc: "Classic zombie survival." },
+            { name: "Papers, Please", img: "thumbnails/papersplease.png", url: "https://Jeremy4401.github.io/SME/games/papersplease.html", cat: "Simulation", desc: "A dystopian document thriller." },
+            { name: "Pixel Gun 3D", img: "thumbnails/pixelgun.png", url: "https://Jeremy4401.github.io/SME/games/pixelgun.html", cat: "Shooter", desc: "Pixelated online FPS action." },
+            { name: "Plants vs Zombies", img: "thumbnails/plantsvszombies.png", url: "https://Jeremy4401.github.io/SME/games/plantsvszombies.html", cat: "Strategy", desc: "Defend your home with plants." },
+            { name: "Plants vs Zombies 2 Gardenless", img: "thumbnails/plantsvszombies2.png", url: "https://Jeremy4401.github.io/SME/games/plantsvszombies2.html", cat: "Strategy", desc: "A classic tower defense game." },
+            { name: "Pokemon", img: "thumbnails/pokemon.png", url: "https://Jeremy4401.github.io/SME/games/pokemon.html", cat: "RPG", desc: "Catch 'em all!" },
+            { name: "Raft", img: "thumbnails/raft.png", url: "https://Jeremy4401.github.io/SME/games/raft.html", cat: "Survival", desc: "Survive on a raft in the ocean." },
+            { name: "Ragdoll Archers", img: "thumbnails/ragdollarchers.png", url: "https://Jeremy4401.github.io/SME/games/ragdollarchers.html", cat: "Action", desc: "Physics-based archery battles." },
+            { name: "Two Player Battle", img: "thumbnails/2playerbattle.png", url: "https://turbowarp.org/292728003/embed", cat: "Action", desc: "Fun local 2-player game." },
+            { name: "Retro Bowl", img: "thumbnails/retrobowl.png", url: "https://Jeremy4401.github.io/SME/games/retrobowl.html", cat: "Sports", desc: "A retro-style football management game." },
+            { name: "Retro Bowl College", img: "thumbnails/retrobowlcollege.png", url: "https://Jeremy4401.github.io/SME/games/retrobowlcollege.html", cat: "Sports", desc: "College football management." },
+            { name: "Slither.io", img: "thumbnails/slitherio.png", url: "https://Jeremy4401.github.io/SME/games/slitherio.html", cat: "Multiplayer", desc: "Grow your snake in this classic io game." },
+            { name: "Slope", img: "thumbnails/slope.png", url: "https://Jeremy4401.github.io/SME/games/slope.html", cat: "Racing", desc: "Roll down the slope and avoid obstacles." },
+            { name: "Smash Karts", img: "thumbnails/smashkarts.png", url: "https://Jeremy4401.github.io/SME/games/smashkarts.html", cat: "Multiplayer", desc: "Multiplayer kart combat." },
+            { name: "Snow Rider 3D", img: "thumbnails/snowrider.png", url: "https://Jeremy4401.github.io/SME/games/snowrider.html", cat: "Racing", desc: "Ride your sled down a snowy track." },
+            { name: "Steal a Brainrot", img: "thumbnails/stealabrainrot.png", url: "https://Jeremy4401.github.io/SME/games/stealabrainrot.html", cat: "Arcade", desc: "A weird, fast-paced game." },
+            { name: "Subway Surfers", img: "thumbnails/subwaysurfers.png", url: "https://Jeremy4401.github.io/SME/games/subwaysurfers.html", cat: "Arcade", desc: "Run and dodge trains." },
+            { name: "SUPERHOT", img: "thumbnails/superhot.png", url: "https://Jeremy4401.github.io/SME/games/superhot.html", cat: "Shooter", desc: "Time moves only when you move." },
+            { name: "Super Mario 64", img: "thumbnails/supermario64.png", url: "https://Jeremy4401.github.io/SME/games/supermario64.html", cat: "Platformer", desc: "The classic 3D adventure." },
+            { name: "Super Mario Bros", img: "thumbnails/supermariobros.png", url: "https://Jeremy4401.github.io/SME/games/supermariobros.html", cat: "Platformer", desc: "The original side-scroller." },
+            { name: "Survival Race", img: "thumbnails/survivalrace.png", url: "https://Jeremy4401.github.io/SME/games/survivalrace.html", cat: "Racing", desc: "A race for survival." },
+            { name: "Temple Run 2", img: "thumbnails/templerun2.png", url: "https://Jeremy4401.github.io/SME/games/templerun2.html", cat: "Arcade", desc: "Run from the demon monkeys." },
+            { name: "They are Coming", img: "thumbnails/theyarecoming.png", url: "https://Jeremy4401.github.io/SME/games/theyarecoming.html", cat: "Shooter", desc: "Shoot the approaching enemies." },
+            { name: "Baldi's Basics", img: "thumbnails/baldisbasics.png", url: "https://Jeremy4401.github.io/SME/games/baldisbasics.html", cat: "Horror", desc: "Collect notebooks and escape Baldi." },
+            { name: "Tiny Fishing", img: "thumbnails/tinyfishing.png", url: "https://Jeremy4401.github.io/SME/games/tinyfishing.html", cat: "Casual", desc: "Cast your line and catch fish." },
+            { name: "Tomb of the Mask", img: "thumbnails/tombofthemask.png", url: "https://Jeremy4401.github.io/SME/games/tombofthemask.html", cat: "Arcade", desc: "Fast-paced maze runner." },
+            { name: "Cut the Rope", img: "thumbnails/cuttherope.png", url: "https://Jeremy4401.github.io/SME/games/cuttherope.html", cat: "Puzzle", desc: "Physics-based puzzle fun." },
+            { name: "Crossy Road", img: "thumbnails/crossyroad.png", url: "https://Jeremy4401.github.io/SME/games/crossyroad.html", cat: "Arcade", desc: "Cross the road without getting hit." },
+            { name: "Cookie Clicker", img: "thumbnails/cookieclicker.png", url: "https://Jeremy4401.github.io/SME/games/cookieclicker.html", cat: "Idle", desc: "The classic incremental game." },
+            { name: "Buildnow GG", img: "thumbnails/buildnow.png", url: "https://Jeremy4401.github.io/SME/games/buildnow.html", cat: "Shooter", desc: "Build and fight online." },
+            { name: "Bouncemasters", img: "thumbnails/bouncemasters.png", url: "https://Jeremy4401.github.io/SME/games/bouncemasters.html", cat: "Arcade", desc: "Launch a penguin as far as you can." },
+            { name: "Bitlife", img: "thumbnails/bitlife.png", url: "https://Jeremy4401.github.io/SME/games/bitlife.html", cat: "Simulation", desc: "Live your life, one text choice at a time." },
+            { name: "Bank Robbery 2", img: "thumbnails/bankrobbery2.png", url: "https://jeremy4401.github.io/SME/games/bankrobbery2.html", cat: "Action", desc: "Plan and execute a bank heist." },
+            { name: "Basket Random", img: "thumbnails/basketrandom.png", url: "https://jeremy4401.github.io/SME/games/basketrandom.html", cat: "Sports", desc: "Hilarous physics-based basketball." },
+            { name: "ULTRAKILL", img: "thumbnails/ultrakill.png", url: "https://jeremy4401.github.io/SME/games/ultrakill.html", cat: "Shooter", desc: "High-octane retro FPS." },
+            { name: "Bendy & The Ink Machine", img: "thumbnails/bendy.png", url: "https://jeremy4401.github.io/SME/games/bendy.html", cat: "Horror", desc: "Cartoon horror in an old studio." },
+            { name: "Cuphead", img: "thumbnails/cuphead.png", url: "https://jeremy4401.github.io/SME/games/cuphead.html", cat: "Platformer", desc: "A challenging run-and-gun game." },
+            { name: "Half Life", img: "thumbnails/halflife.png", url: "https://jeremy4401.github.io/SME/games/halflife.html", cat: "Shooter", desc: "The revolutionary sci-fi FPS." },
+            { name: "R.E.P.O.", img: "thumbnails/repo.png", url: "https://jeremy4401.github.io/SME/games/repo.html", cat: "Action", desc: "A retro pixel action game." },
+            { name: "Bad Parenting", img: "thumbnails/badparenting.png", url: "https://jeremy4401.github.io/SME/games/badparenting.html", cat: "Horror", desc: "Survive a scary home environment." }
+        ];
         
-        window.openGameModal = function(gameId) {
-            const game = gameData.find(g => g.id === gameId);
+        let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
+        function isFavorite(name) {
+            return favorites.includes(name);
+        }
+
+        function toggleFavorite(name) {
+            const index = favorites.indexOf(name);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                notify(`${name} removed from favorites.`, 'info');
+            } else {
+                favorites.unshift(name);
+                notify(`${name} added to favorites!`, 'success');
+            }
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            
+            // Re-render the current view if it's games or favorites
+            if (document.getElementById('games').classList.contains('active')) {
+                renderGames();
+            } else if (document.getElementById('favorites').classList.contains('active')) {
+                renderFavorites();
+            }
+        }
+
+        function renderGameCard(g) {
+            const favClass = isFavorite(g.name) ? 'fav' : '';
+            return `
+                <div class="card" onclick="showGameModal('${g.name}')">
+                    <span class="star ${favClass}" onclick="event.stopPropagation(); toggleFavorite('${g.name}')">⭐</span>
+                    <img src="${g.img}" alt="${g.name}">
+                    <div style="text-align:center;">
+                        <strong>${g.name}</strong><br>
+                        <span style="font-size: 12px; opacity: 0.7;">${g.cat}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGames() {
+            const sec = document.getElementById("games");
+            const box = document.getElementById("gameList");
+            if (!sec || !box) return;
+
+            // Simple rendering without search/sort (as those inputs were not in the HTML)
+            box.innerHTML = games.map(renderGameCard).join('');
+        }
+
+        function renderFavorites() {
+            const box = document.getElementById("favoriteList");
+            if (!box) return;
+
+            const favoriteGames = games.filter(g => isFavorite(g.name));
+
+            if (favoriteGames.length === 0) {
+                box.innerHTML = "<p>You haven't added any favorites yet.</p>";
+                return;
+            }
+
+            box.innerHTML = favoriteGames.map(renderGameCard).join('');
+        }
+
+        /* ============================
+            GAME MODAL & LAUNCH
+        ============================ */
+
+        let activeGame = null;
+
+        function showGameModal(gameName) {
+            const game = games.find(g => g.name === gameName);
             if (!game) return;
 
-            document.getElementById('modalImg').src = game.image;
-            document.getElementById('modalTitle').textContent = game.title;
-            document.getElementById('modalDesc').textContent = game.description;
-            document.getElementById('playBtn').onclick = () => loadEmbed(game.url);
+            activeGame = game;
+            
+            document.getElementById('modalTitle').textContent = game.name;
+            document.getElementById('modalDesc').textContent = game.desc || "No description available.";
+            document.getElementById('modalImg').src = game.img;
+
+            // Check if game is in recent list to show play time (placeholder)
+            const isRecent = recent.includes(game.name);
+            document.getElementById('playtimeBox').innerHTML = isRecent ? 
+                '<p style="color:var(--accent);">You recently played this!</p>' : '';
+            
+            document.getElementById('playBtn').onclick = () => launchGame(game.name);
 
             document.getElementById('gameModal').style.display = 'flex';
         }
-
-
-        // ============================
-        // REQUESTS/SUGGESTION LOGIC
-        // ============================
-
-        const WEBHOOK_URL = "YOUR_DISCORD_WEBHOOK_HERE"; // IMPORTANT: Replace this placeholder
         
-        const requestForm = document.getElementById('requestForm');
-        const formMessage = document.getElementById('form-message');
-
-        if (requestForm) {
-            requestForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const reqType = document.getElementById('reqType').value;
-                const reqDetail = document.getElementById('reqDetail').value;
-                const reqName = document.getElementById('reqName').value || 'Anonymous';
-
-                // Basic validation
-                if (!reqType || !reqDetail) {
-                    formMessage.textContent = 'Please select a request type and provide details.';
-                    formMessage.className = 'error';
-                    formMessage.style.display = 'block';
-                    return;
-                }
-
-                const payload = {
-                    content: null,
-                    embeds: [{
-                        title: `📮 New Request: ${reqType}`,
-                        description: `**Details:**\n${reqDetail}`,
-                        color: 3447003, // Blue color for Discord embed
-                        fields: [
-                            { name: "Submitted By", value: reqName, inline: true },
-                            { name: "Time", value: new Date().toUTCString(), inline: true },
-                        ]
-                    }]
-                };
-
-                try {
-                    // This is commented out to prevent failure in a non-deployed environment
-                    /*
-                    const response = await fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Discord API error: ${response.status} ${response.statusText}`);
-                    }
-                    */
-
-                    formMessage.textContent = 'Request sent successfully! (Note: Actual Discord webhook is disabled in this demo).';
-                    formMessage.className = 'success';
-                    requestForm.reset();
-                    
-                } catch (error) {
-                    console.error('Error submitting request:', error);
-                    formMessage.textContent = 'Failed to send request. Check console for details.';
-                    formMessage.className = 'error';
-                }
-                formMessage.style.display = 'block';
-            });
+        function closeGameModal() {
+            document.getElementById('gameModal').style.display = 'none';
+            activeGame = null;
         }
 
-        // ============================
-        // THEATER LOGIC
-        // ============================
+        function launchGame(gameName) {
+            const game = games.find(g => g.name === gameName);
+            if (!game) return;
 
-        window.openTheaterEmbedURL = function(url) {
-            document.getElementById("theaterEmbedFrame").src = url;
-            document.getElementById("theaterEmbedContainer").style.display = 'block';
-            document.getElementById("homeBtn").style.display = 'flex';
+            closeGameModal(); // Close the modal
+            
+            const embedWin = document.getElementById('embedWin');
+            const embedFrame = document.getElementById('embedFrame');
+
+            embedFrame.src = enc(game.url);
+            embedWin.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Hide main scrollbar
+
+            addRecent(game.name);
+            addActivity('Played Game', `Started playing ${game.name}`);
         }
 
-        window.showTheaterPage = function(pageId, element) {
-            document.querySelectorAll('.theater-page').forEach(p => p.style.display = 'none');
-            document.getElementById(pageId).style.display = 'block';
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            if (element) element.classList.add('active');
-        }
-        showTheaterPage('hub-page'); // Default to hub page
+        function closeEmbed() {
+            const embedWin = document.getElementById('embedWin');
+            const embedFrame = document.getElementById('embedFrame');
+            
+            embedFrame.src = ''; // Clear the iframe content
+            embedWin.style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore main scrollbar
 
-        window.openTheaterSettings = function() {
-            const panel = document.getElementById('theater-settings-panel');
-            panel.classList.toggle('open');
-            // Close if user clicks outside
-            if (panel.classList.contains('open')) {
-                document.addEventListener('click', closeSettingsOnClickOutside);
-            } else {
-                document.removeEventListener('click', closeSettingsOnClickOutside);
+            if (activeGame) {
+                addActivity('Finished Game', `Finished playing ${activeGame.name}`);
+                activeGame = null;
             }
+            renderHome(); // Update the Continue Playing list
         }
 
-        function closeSettingsOnClickOutside(event) {
-            const panel = document.getElementById('theater-settings-panel');
-            const button = document.getElementById('settings-button');
-            if (!panel.contains(event.target) && !button.contains(event.target)) {
-                panel.classList.remove('open');
-                document.removeEventListener('click', closeSettingsOnClickOutside);
+        // Global key listener to escape the game embed
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.getElementById('embedWin').style.display === 'block') {
+                closeEmbed();
             }
-        }
-        
-        window.toggleDarkMode = function() {
-            document.getElementById('appBody').classList.toggle('dark');
-            const isDark = document.getElementById('appBody').classList.contains('dark');
-            localStorage.setItem('theaterDarkMode', isDark ? 'true' : 'false');
+        });
+
+        /* ============================
+                    PROFILE
+        ============================ */
+
+        function renderProfile() {
+            document.getElementById('profileUsername').textContent = profile.username;
+            document.getElementById('profileBio').textContent = profile.bio;
+            document.getElementById('profileStatus').textContent = profile.status;
+            document.getElementById('profileCode').textContent = friendCode;
+            document.getElementById('profileAvatarImg').src = profile.avatar;
         }
 
-        // Apply saved dark mode preference
-        if (localStorage.getItem('theaterDarkMode') === 'true') {
-            document.getElementById('appBody').classList.add('dark');
+        /* ============================
+                    SETTINGS
+        ============================ */
+
+        function openSettings() {
+            nav('settingsPage');
+            const content = document.getElementById('settingsContent');
+            content.innerHTML = `
+                <h3>Profile Settings</h3>
+                <label for="setUsername">Username:</label><br>
+                <input type="text" id="setUsername" value="${profile.username}" style="padding:8px; width:90%; margin-bottom:10px; border-radius:4px; border:1px solid #555; background: var(--bg); color: var(--text);"><br>
+                
+                <label for="setBio">Bio:</label><br>
+                <textarea id="setBio" style="padding:8px; width:90%; height: 80px; margin-bottom:10px; border-radius:4px; border:1px solid #555; background: var(--bg); color: var(--text);">${profile.bio}</textarea><br>
+                
+                <label for="setAvatar">Avatar URL:</label><br>
+                <input type="url" id="setAvatar" value="${profile.avatar}" style="padding:8px; width:90%; margin-bottom:10px; border-radius:4px; border:1px solid #555; background: var(--bg); color: var(--text);"><br>
+                
+                <label for="setStatus">Status:</label><br>
+                <select id="setStatus" style="padding:8px; width:94%; margin-bottom:15px; border-radius:4px; background: var(--bg); color: var(--text);">
+                    <option value="Online">Online</option>
+                    <option value="Away">Away</option>
+                    <option value="Busy">Busy</option>
+                </select><br>
+
+                <button onclick="saveProfile()" style="padding:10px; border:none; border-radius:8px; background:var(--accent); color:white; cursor:pointer;">Save Profile</button>
+            `;
+            document.getElementById('setStatus').value = profile.status;
         }
 
-        window.togglePerformance = function() {
-            // Placeholder for performance toggle logic
-            notify("Performance mode toggle functionality coming soon!");
+        function saveProfile() {
+            const username = document.getElementById('setUsername').value.trim();
+            const bio = document.getElementById('setBio').value.trim();
+            const avatar = document.getElementById('setAvatar').value.trim();
+            const status = document.getElementById('setStatus').value;
+
+            profile.username = username || "SME User";
+            profile.bio = bio;
+            profile.avatar = avatar || "https://i.imgur.com/1X5Rz.png";
+            profile.status = status;
+
+            localStorage.setItem("profile", JSON.stringify(profile));
+            notify("Profile saved successfully!", "success");
+            renderProfile();
+            renderHome();
         }
-        window.exportSettings = function() { notify("Export settings feature coming soon!"); }
-        window.importSettings = function(event) { notify("Import settings feature coming soon!"); }
-        
-        window.scrollContent = function(id, direction) {
-            const container = document.getElementById(id);
-            const scrollAmount = 300; 
-            if (direction === 'left') {
-                container.scrollLeft -= scrollAmount;
-            } else {
-                container.scrollLeft += scrollAmount;
+
+        // Initial setup calls
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply light theme if it was previously set (simple example)
+            if (localStorage.getItem('theme') === 'light') {
+                document.body.classList.add('light');
             }
-        }
-
-
-        // ============================
-        // PROXY LOGIC
-        // ============================
-
-        window.launchProxy = function() {
-            const urlInput = document.getElementById('proxyUrlInput');
-            const iframe = document.getElementById('proxyFrame');
-            const rawUrl = urlInput.value.trim();
-
-            if (!rawUrl) {
-                notify("Please enter a URL to launch.");
-                return;
-            }
-
-            // Simple check to ensure a protocol is present
-            let finalUrl = rawUrl;
-            if (!finalUrl.startsWith('http://') && !finalUrl.startsWith('https://')) {
-                finalUrl = 'https://' + finalUrl;
-            }
-
-            // For this single-file demo, we will load the raw URL, which might be blocked
-            iframe.src = finalUrl;
-            iframe.style.display = 'block';
-        }
-
-        // ============================
-        // SNOWFLAKES (RE-INIT)
-        // ============================
-        // This runs the snow animation continuously across all "pages"
-        const snowLayer = document.getElementById('snow-layer');
-        function createSnowflake() {
-            const s = document.createElement("div");
-            s.classList.add("snowflake");
-            s.style.width = s.style.height = Math.random() * 4 + 1 + "px";
-            s.style.top = Math.random() * -10 + "vh";
-            s.style.left = Math.random() * 100 + "vw";
-            s.style.animationDuration = Math.random() * 12 + 8 + "s";
-            s.style.animationDelay = Math.random() * 6 + "s";
-            s.style.zIndex = Math.floor(Math.random() * 5);
-
-            snowLayer.appendChild(s);
-            setTimeout(() => s.remove(), 20000);
-        }
-        setInterval(createSnowflake, 150);
-
-        // Render initial game list
-        renderGameList('All');
+            renderHome(); // Ensure home content is rendered on load
+            renderGames(); // Pre-render games list for the game section
+        });
     </script>
 </body>
 </html>
