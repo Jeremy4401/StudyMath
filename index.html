@@ -753,15 +753,15 @@
     <div class="bell-fall-container" id="bell-container"></div>
     <nav class="sidebar">
         <div class="sidebar-links">
-            <a href="#home" class="nav-link active"><span>🏠</span>Home</a>
-            <a href="#games" class="nav-link"><span>🎮</span>Games</a>
-            <a href="#favorites" class="nav-link"><span>⭐</span>Favorites</a>
-            <a href="#theater" class="nav-link"><span>🎬</span>Theater</a>
-            <a href="#proxies" class="nav-link"><span>🌐</span>Proxies</a>
-            <a href="#requests" class="nav-link"><span>📧</span>Requests</a>
-            <a href="#settings" class="nav-link"><span>⚙️</span>Settings</a>
-            <a href="#friends" class="nav-link"><span>🤝</span>Friends</a>
-            <a href="#profile" class="nav-link"><span>👤</span>Profile</a>
+            <a href="#home" class="nav-link active" onclick="showPage('home')"><span>🏠</span>Home</a>
+            <a href="#games" class="nav-link" onclick="showPage('games')"><span>🎮</span>Games</a>
+            <a href="#favorites" class="nav-link" onclick="showPage('favorites')"><span>⭐</span>Favorites</a>
+            <a href="#theater" class="nav-link" onclick="showPage('theater')"><span>🎬</span>Theater</a>
+            <a href="#proxies" class="nav-link" onclick="showPage('proxies')"><span>🌐</span>Proxies</a>
+            <a href="#requests" class="nav-link" onclick="showPage('requests')"><span>📧</span>Requests</a>
+            <a href="#settings" class="nav-link" onclick="showPage('settings')"><span>⚙️</span>Settings</a>
+            <a href="#friends" class="nav-link" onclick="showPage('friends')"><span>🤝</span>Friends</a>
+            <a href="#profile" class="nav-link" onclick="showPage('profile')"><span>👤</span>Profile</a>
         </div>
         <button id="panic-button" onclick="triggerPanic()">🚨 PANIC</button>
     </nav>
@@ -1096,6 +1096,7 @@
     window.togglePerformanceMode = togglePerformanceMode;
     window.exportData = exportData;
     window.importDataFromFile = importDataFromFile;
+    window.showPage = showPage; // Exposing showPage for the inline onclick handlers
 
     // Function to handle page switching
     function showPage(pageId) {
@@ -1118,7 +1119,10 @@
             document.body.style.paddingRight = '0';
         }
         
-        history.pushState(null, null, `#${pageId}`);
+        // This updates the URL hash for sharing/bookmarking
+        if (window.location.hash !== `#${pageId}`) {
+            window.location.hash = pageId;
+        }
     }
 
     // Function to handle the Panic Button
@@ -1518,7 +1522,7 @@
     }
     
     // =======================================================
-    // [G] INITIALIZATION ON LOAD
+    // [G] INITIALIZATION ON LOAD (FIXED)
     // =======================================================
     
     document.addEventListener('DOMContentLoaded', () => {
@@ -1540,6 +1544,16 @@
         });
         
         loadUserProfileData();
+        
+        // **********************************************
+        // THE FIX: Listen for hash changes in the URL 
+        //           (e.g., when pressing the back button)
+        // **********************************************
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.substring(1) || 'home';
+            showPage(hash);
+        });
+        // **********************************************
     });
 
 </script>
